@@ -6,7 +6,7 @@
     "start": "node server"
   },
   "engines": {
-    "node": "8.0.0"
+    "node": "8.9.4."
   },
   "author": {
     "name": "9310061"
