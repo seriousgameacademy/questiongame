@@ -4,7 +4,7 @@
     <title>Hello world</title>
 </head>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 
 <script>
     //var socket = io();
@@ -20,9 +20,7 @@
     //    document.write(data.description);
     //});
 
-    var socket = io({
-        transports: ['polling', 'websocket']
-    });
+    var socket = io();
     function setUsername() {
         socket.username = document.getElementById('name').value
         socket.emit('setUsername', document.getElementById('name').value);

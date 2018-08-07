@@ -23,16 +23,8 @@ server.listen(port, () => {
     console.log('Server listening at port %d', port);
 });
 
-var io = require('socket.io')(server, {
-    transports: [
-        //'websocket', 
-        'flashsocket',
-        'htmlfile',
-        'xhr-polling',
-        'jsonp-polling',
-        'polling'
-    ]
-});
+var io = require('socket.io')(server);
+
 
 var clients = 0;
 var users = [];
