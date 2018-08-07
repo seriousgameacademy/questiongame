@@ -7,7 +7,7 @@ http.createServer(app).listen(port);
 //http.listen(1337, function () {
 //    console.log('listening on localhost:3000');
 //});
-
+server.get(/.*/, restify.serveStatic({ 'directory': '.', 'default': 'index.html' }));
 
 
 //var app = require('express')();
