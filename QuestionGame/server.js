@@ -10,7 +10,7 @@ http.createServer(function (req, res) {
 
 
 
-//var app = require('express')();
+var app = require('express')();
 //var http = require('http').Server(app);
 //var port = process.env.PORT || 1337;
 //var io = require('socket.io')(http);
