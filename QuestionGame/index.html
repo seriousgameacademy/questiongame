@@ -20,16 +20,8 @@
     //    document.write(data.description);
     //});
 
-    var socket = io(window.location.protocol + "//" + window.location.hostname.split(":")[0] + ":8443", {
-        path: "/socket.io", transports: [
-            'websocket',
-            'flashsocket',
-            'htmlfile',
-            'xhr-polling',
-            'jsonp-polling',
-            'polling'
-        ],
-        allowUpgrades: true
+    var socket = io({
+        transports: ['polling', 'websocket']
     });
     function setUsername() {
         socket.username = document.getElementById('name').value
