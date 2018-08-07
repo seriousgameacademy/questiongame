@@ -7,16 +7,16 @@ http.createServer(app).listen(port);
 //http.listen(1337, function () {
 //    console.log('listening on localhost:3000');
 //});
-
+app.get('/', function (req, res) {
+    res.sendfile('index.html');
+});
 
 
 //var app = require('express')();
 //var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-app.get('/', function (req, res) {
-    res.sendfile('index.html');
-});
+
 
 var clients = 0;
 var users = [];
