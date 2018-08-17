@@ -43,7 +43,7 @@ io.on('connection', function (socket) {
             users.push(socket.username);
             clients++;
             socket.emit('userSet', { username: socket.username });
-            socket.emit('welkommsg', { message: ('Welkom ' + socket.username + '!') });
+            socket.emit('welkommsg', { message: 'Welkom!', username: socket.username });
             socket.broadcast.emit('clientconnectmsg', { message: (socket.username + ' doet ook mee!') });
 
         }

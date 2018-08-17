@@ -1,10 +1,96 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <base href="/">
     <title>Question Game - Serious Game Academy</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    
 </head>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif !important;
+        font-size: 15px;
+        color: #FFFFFF;
+        background-color: #27abde !important;
+    }
 
+    #message-welkom-text {
+        text-align: center;
+        font-size: 36px;
+    }
+
+    #message-welkom-user {
+        text-align: center;
+        font-size: 24px;
+    }
+
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        border-top: 5px solid white;
+        min-height: 50px;
+        background-color: orange;
+        text-align: center;
+        color: white;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        /* border: 1px solid transparent; */
+        border-radius: 4px;
+        box-shadow: 0 15px 15px -20px rgba(0,0,0,0.5),0 4px 11px -3px rgba(0,0,0,0.25) !important;
+        border-style: solid;
+        border-width: 2px;
+    }
+
+    .btn-block {
+        display: block;
+        width: auto;
+        margin-left: 15px;
+        margin-right: 15px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: #27abde;
+        border-color: #fff;
+    }
+
+    .spinner{
+        text-align: center;
+    }
+
+    #message-send-container{
+        display:none;
+    }
+
+    a {
+        color: #337ab7;
+        text-decoration: none;
+    }
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <script>   
 
@@ -15,12 +101,12 @@
     };
     
     socket.on('userExists', function (data) {
-        document.getElementById('error-container').innerHTML = data;
+        $("#error-container").html(data);
     });
     socket.on('userSet', function (data) {
-        document.body.innerHTML = '<input type = "text" id = "message">\
-         <button type = "button" name = "button" onclick = "sendMessage()">Send</button>\
-         <div id = "message-container"></div>';
+        $("#login-container").hide();
+        $(".start-message").show();
+        $(".spinner").show();
     });
     function sendMessage() {
         var msg = document.getElementById('message').value;
@@ -36,7 +122,8 @@
     })
     socket.on('welkommsg', function (data) {
         if (socket.username) {
-            document.getElementById('message-container').innerHTML += '<div>' + data.message + '</div>'
+            $("#message-welkom-text").html(data.message);
+            $("#message-welkom-user").html(data.username);
         }
     })
     socket.on('clientconnectmsg', function (data) {
@@ -48,7 +135,64 @@
 
 <body>
     <div id="error-container"></div>
-    <input id="name" type="text" name="name" value="" placeholder="Vul in je naam!">
-    <button type="button" name="button" onclick="setUsername()">Start</button>
+    <div id="login-container">
+        <input id="name" type="text" name="name" value="" placeholder="Vul in je naam!">
+        <button type="button" name="button" onclick="setUsername()">Start</button>
+    </div>
+    <div id="message-container-welkom" class="message-welkom">
+        <div id="message-welkom-text"></div>
+        <div id="message-welkom-user"></div>
+    </div>
+    <div id="message-send-container">
+        <input type="text" id="message"><button type="button" name="button" onclick="sendMessage()">Send</button>
+    </div>
+    <div id="message-container"></div>
+
+    <div class="spinner" style="display:none;">
+        <svg class="lds-balls" width="250px" height="250px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+            <circle cx="70.7111" cy="62.7851" r="10" fill="#337ab7">
+                <animate attributeName="cx" values="80;59.270509831248425" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                <animate attributeName="cy" values="50;78.53169548885461" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                <animate attributeName="fill" values="#337ab7;#5bc0de" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+            </circle>
+            <circle cx="44.2407" cy="73.6482" r="10" fill="#5bc0de">
+                <animate attributeName="cx" values="59.270509831248425;25.72949016875158" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                <animate attributeName="cy" values="78.53169548885461;67.6335575687742" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                <animate attributeName="fill" values="#5bc0de;#5cb85c" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+            </circle>
+            <circle cx="25.7295" cy="51.8303" r="10" fill="#5cb85c">
+                <animate attributeName="cx" values="25.72949016875158;25.729490168751575" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                <animate attributeName="cy" values="67.6335575687742;32.366442431225806" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                <animate attributeName="fill" values="#5cb85c;#f0ad4e" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+            </circle>
+            <circle cx="40.7593" cy="27.483" r="10" fill="#f0ad4e">
+                <animate attributeName="cx" values="25.729490168751575;59.27050983124842" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                <animate attributeName="cy" values="32.366442431225806;21.46830451114539" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                <animate attributeName="fill" values="#f0ad4e;#d9534f" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+            </circle>
+            <circle cx="68.5594" cy="34.2534" r="10" fill="#d9534f">
+                <animate attributeName="cx" values="59.27050983124842;80" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                <animate attributeName="cy" values="21.46830451114539;49.99999999999999" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                <animate attributeName="fill" values="#d9534f;#337ab7" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+            </circle>
+        </svg>
+    </div>
+    <div class="start-message" style="display:none; text-align:center;">
+        Het spel gaat zo beginnen...
+    </div>
+    <div class="footer">
+        <div>
+            <a href="javascript:void(0);" class="btn btn-info btn-block" target="_self">Antwoord A</a>
+        </div>
+        <div>
+            <a href="javascript:void(0);" class="btn btn-info btn-block" target="_self">Antwoord B</a>
+        </div>
+        <div>
+            <a href="javascript:void(0);" class="btn btn-info btn-block" target="_self">Antwoord C</a>
+        </div>
+        <div>
+            <a href="javascript:void(0);" class="btn btn-info btn-block" target="_self">Antwoord D</a>
+        </div>
+    </div>
 </body>
 </html>
