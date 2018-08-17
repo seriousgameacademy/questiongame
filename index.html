@@ -4,24 +4,40 @@
     <base href="/">
     <title>Question Game - Serious Game Academy</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- MUST have, so iPhone doesn't autozoom and change the fontsize! -->
+    <script type="text/javascript">
+        var devicewidth = window.screen.width;
+        var deviceheight = window.screen.height;
+        var devicemin = Math.min(devicewidth, deviceheight);
+        // say we want base font size: 16px @ 600px (min of 800x600); 16/600 = 0.0266667
+        var basefontsize = Math.round(0.0267 * devicemin);
+        // apply:
+        var rootElement = document.documentElement;
+        rootElement.style.fontSize = basefontsize;
+        // report:
+        console.log(navigator.userAgent);
+        var report = "device res: " + devicewidth + " x " + deviceheight + " ; base font size: " + basefontsize + "/" + rootElement.style.fontSize;
+        console.log(report);
+    </script>
 </head>
 <style>
     body {
         font-family: 'Roboto', sans-serif !important;
-        font-size: 15px;
+        
+        -webkit-text-size-adjust: none;
         color: #FFFFFF;
         background-color: #27abde !important;
     }
 
     #message-welkom-text {
         text-align: center;
-        font-size: 36px;
+        font-size: 4em;
     }
 
     #message-welkom-user {
         text-align: center;
-        font-size: 24px;
+        font-size: 3em;
     }
 
     .footer {
@@ -40,7 +56,7 @@
         display: inline-block;
         padding: 6px 12px;
         margin-bottom: 0;
-        font-size: 14px;
+        font-size: 2em;
         font-weight: normal;
         line-height: 1.42857143;
         text-align: center;
@@ -149,7 +165,7 @@
     <div id="message-container"></div>
 
     <div class="spinner" style="display:none;">
-        <svg class="lds-balls" width="250px" height="250px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+        <svg class="lds-balls" width="70%" height="70%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
             <circle cx="70.7111" cy="62.7851" r="10" fill="#337ab7">
                 <animate attributeName="cx" values="80;59.270509831248425" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
                 <animate attributeName="cy" values="50;78.53169548885461" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
