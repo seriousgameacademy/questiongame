@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <base href="/">
     <title>Question Game - Serious Game Academy</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <!-- Required meta tags -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- MUST have, so iPhone doesn't autozoom and change the fontsize! -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <!-- MUST have, so iPhone doesn't autozoom and change the fontsize! -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
     <script type="text/javascript">
         var devicewidth = window.screen.width;
         var deviceheight = window.screen.height;
@@ -28,6 +36,7 @@
         -webkit-text-size-adjust: none;
         color: #FFFFFF;
         background-color: #27abde !important;
+        height: 100%;
     }
 
     #message-welkom-text {
@@ -50,9 +59,10 @@
         background-color: orange;
         text-align: center;
         color: white;
+        /*display: none;*/
     }
 
-    .btn {
+    /*.btn {
         display: inline-block;
         padding: 6px 12px;
         margin-bottom: 0;
@@ -70,14 +80,14 @@
         -ms-user-select: none;
         user-select: none;
         background-image: none;
-        /* border: 1px solid transparent; */
+        border: 1px solid transparent; 
         border-radius: 4px;
         box-shadow: 0 15px 15px -20px rgba(0,0,0,0.5),0 4px 11px -3px rgba(0,0,0,0.25) !important;
         border-style: solid;
         border-width: 2px;
-    }
+    }*/
 
-    .btn-block {
+    .btn-block-custom {
         display: block;
         width: auto;
         margin-left: 15px;
@@ -100,13 +110,20 @@
         display:none;
     }
 
+    #player-container {
+        display: none;
+    }
+
+    #admin-container {
+        display: none;
+    }
+
     a {
         color: #337ab7;
         text-decoration: none;
     }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 
 <script>   
 
@@ -115,7 +132,16 @@
         socket.username = document.getElementById('name').value
         socket.emit('setUsername', document.getElementById('name').value);
     };
-    
+    socket.on('setScreenType', function (data) {
+        if (data.type == 'player') {
+            $("#player-container").show();
+            $("#admin-container").hide();
+            return;
+        }
+        $("#player-container").hide();
+        $("#admin-container").show();
+    });
+
     socket.on('userExists', function (data) {
         $("#error-container").html(data);
     });
@@ -151,63 +177,108 @@
 
 <body>
     <div id="error-container"></div>
-    <div id="login-container">
-        <input id="name" type="text" name="name" value="" placeholder="Vul in je naam!">
-        <button type="button" name="button" onclick="setUsername()">Start</button>
-    </div>
-    <div id="message-container-welkom" class="message-welkom">
-        <div id="message-welkom-text"></div>
-        <div id="message-welkom-user"></div>
-    </div>
-    <div id="message-send-container">
-        <input type="text" id="message"><button type="button" name="button" onclick="sendMessage()">Send</button>
-    </div>
-    <div id="message-container"></div>
+    <div id="login-container" class="container">
 
-    <div class="spinner" style="display:none;">
-        <svg class="lds-balls" width="70%" height="70%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-            <circle cx="70.7111" cy="62.7851" r="10" fill="#337ab7">
-                <animate attributeName="cx" values="80;59.270509831248425" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-                <animate attributeName="cy" values="50;78.53169548885461" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-                <animate attributeName="fill" values="#337ab7;#5bc0de" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-            </circle>
-            <circle cx="44.2407" cy="73.6482" r="10" fill="#5bc0de">
-                <animate attributeName="cx" values="59.270509831248425;25.72949016875158" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-                <animate attributeName="cy" values="78.53169548885461;67.6335575687742" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-                <animate attributeName="fill" values="#5bc0de;#5cb85c" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-            </circle>
-            <circle cx="25.7295" cy="51.8303" r="10" fill="#5cb85c">
-                <animate attributeName="cx" values="25.72949016875158;25.729490168751575" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-                <animate attributeName="cy" values="67.6335575687742;32.366442431225806" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-                <animate attributeName="fill" values="#5cb85c;#f0ad4e" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-            </circle>
-            <circle cx="40.7593" cy="27.483" r="10" fill="#f0ad4e">
-                <animate attributeName="cx" values="25.729490168751575;59.27050983124842" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-                <animate attributeName="cy" values="32.366442431225806;21.46830451114539" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-                <animate attributeName="fill" values="#f0ad4e;#d9534f" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-            </circle>
-            <circle cx="68.5594" cy="34.2534" r="10" fill="#d9534f">
-                <animate attributeName="cx" values="59.27050983124842;80" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-                <animate attributeName="cy" values="21.46830451114539;49.99999999999999" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-                <animate attributeName="fill" values="#d9534f;#337ab7" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
-            </circle>
-        </svg>
+        <div class="row justify-content-center align-self-center" style="margin-top:100px;">
+            <div class="col-sm-4">
+
+            </div>
+            <div class="col-sm-3">
+                <div class="text-center" style="margin-bottom:25px">
+                    <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class=""/>
+                </div>
+                <div class="text-center">
+                    <form>
+                        <div class="form-group">
+                            <input id="name"  class="form-control" type="text" name="name" value="" aria-describedby="emailHelp" placeholder="Vul in je naam!">
+                            
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your name with anyone else...;-) watch the big screen!</small>
+                        </div>
+
+                    </form>
+                    
+                </div>
+                <div class="text-center">
+                    <button type="button" name="button" class="btn btn-info btn-lg btn-block" onclick="setUsername()">Start</button>
+                </div>
+            </div>
+            <div class="col-sm-4">
+
+            </div>
+        </div>
     </div>
-    <div class="start-message" style="display:none; text-align:center;">
-        Het spel gaat zo beginnen...
+    <div id="player-container">
+        <div id="message-container-welkom" class="message-welkom">
+            <div id="message-welkom-text"></div>
+            <div id="message-welkom-user"></div>
+        </div>
+        <div id="message-send-container">
+            <input type="text" id="message"><button type="button" name="button" onclick="sendMessage()">Send</button>
+        </div>
+        <div id="message-container"></div>
+
+        <div class="spinner" style="display:none;">
+            <svg class="lds-balls" width="70%" height="70%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                <circle cx="70.7111" cy="62.7851" r="10" fill="#337ab7">
+                    <animate attributeName="cx" values="80;59.270509831248425" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                    <animate attributeName="cy" values="50;78.53169548885461" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                    <animate attributeName="fill" values="#337ab7;#5bc0de" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                </circle>
+                <circle cx="44.2407" cy="73.6482" r="10" fill="#5bc0de">
+                    <animate attributeName="cx" values="59.270509831248425;25.72949016875158" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                    <animate attributeName="cy" values="78.53169548885461;67.6335575687742" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                    <animate attributeName="fill" values="#5bc0de;#5cb85c" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                </circle>
+                <circle cx="25.7295" cy="51.8303" r="10" fill="#5cb85c">
+                    <animate attributeName="cx" values="25.72949016875158;25.729490168751575" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                    <animate attributeName="cy" values="67.6335575687742;32.366442431225806" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                    <animate attributeName="fill" values="#5cb85c;#f0ad4e" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                </circle>
+                <circle cx="40.7593" cy="27.483" r="10" fill="#f0ad4e">
+                    <animate attributeName="cx" values="25.729490168751575;59.27050983124842" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                    <animate attributeName="cy" values="32.366442431225806;21.46830451114539" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                    <animate attributeName="fill" values="#f0ad4e;#d9534f" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                </circle>
+                <circle cx="68.5594" cy="34.2534" r="10" fill="#d9534f">
+                    <animate attributeName="cx" values="59.27050983124842;80" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                    <animate attributeName="cy" values="21.46830451114539;49.99999999999999" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                    <animate attributeName="fill" values="#d9534f;#337ab7" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
+                </circle>
+            </svg>
+        </div>
+        <div class="start-message" style="display:none; text-align:center;">
+            Het spel gaat zo beginnen...
+        </div>
+        <div class="footer">
+            <div>
+                <a href="javascript:void(0);" class="btn btn-info btn-block-custom" target="_self">Antwoord A</a>
+            </div>
+            <div>
+                <a href="javascript:void(0);" class="btn btn-info btn-block-custom" target="_self">Antwoord B</a>
+            </div>
+            <div>
+                <a href="javascript:void(0);" class="btn btn-info btn-block-custom" target="_self">Antwoord C</a>
+            </div>
+            <div>
+                <a href="javascript:void(0);" class="btn btn-info btn-block-custom" target="_self">Antwoord D</a>
+            </div>
+        </div>
     </div>
-    <div class="footer">
-        <div>
-            <a href="javascript:void(0);" class="btn btn-info btn-block" target="_self">Antwoord A</a>
+    <div id="admin-container" class="container">
+        <div class="row" align-items-start>
+            <div class="col-sm-12">
+                <div class="text-center">
+                    Logo van serious game academy
+                </div>
+            </div>
         </div>
-        <div>
-            <a href="javascript:void(0);" class="btn btn-info btn-block" target="_self">Antwoord B</a>
-        </div>
-        <div>
-            <a href="javascript:void(0);" class="btn btn-info btn-block" target="_self">Antwoord C</a>
-        </div>
-        <div>
-            <a href="javascript:void(0);" class="btn btn-info btn-block" target="_self">Antwoord D</a>
+        <div class="row" align-items-start>
+            <div class="col-sm-8">
+                Hello world
+            </div>
+            <div class="col-sm-4">
+                Counter of players
+            </div>
         </div>
     </div>
 </body>
