@@ -165,9 +165,23 @@
 
     socket.on('newquestion', function (data) {
         console.log(data);
-
+        $('#question-question').html(data.question.question);
+        $('#answer-a').html(data.question.A);
+        $('#answer-b').html(data.question.B);
+        $('#answer-c').html(data.question.C);
+        $('#answer-d').html(data.question.D);
     })
-    
+
+    socket.on('setGameState', function (data) {
+        // Hide all
+        $('#admin-question-container').hide();
+        $('#admin-start-container').hide();
+
+        // Show
+        if (data.state == 'question' && data.username == 'admin') {
+            $('#admin-question-container').show();
+        }
+    })
 
     socket.on('newmsg', function (data) {
         if (socket.username) {
@@ -287,7 +301,7 @@
 
             </div>
         </div>
-        <div class="row" align-items-start>
+        <div id="admin-start-container" class="row" align-items-start>
             <div class="col-sm-8">
                 <div id="message-send-container">
                     <input type="text" id="message"><button type="button" name="button" onclick="sendMessage()">Send</button>
@@ -308,11 +322,33 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="text-center">
-                                <button type="button" name="button" class="btn btn-info btn-lg btn-block" onclick="startQuestions()">Let's Play</button>
-                            </div>
+                            <button type="button" name="button" class="btn btn-info btn-lg btn-block" onclick="startQuestions()">Let's Play</button>
+                        </div>
                     </div>
                 </div>
-                
+
+            </div>
+        </div>
+        <div id="admin-question-container" class="row" style="display:none;" align-items-start>
+            <div class="col-sm-12">
+                <div>
+                    <h2>Vraag: <span id="question-number"></span></h2>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div id="question-question"></div>
+            </div>
+            <div class="col-sm-12">
+                A. <span id="answer-a"></span>
+            </div>
+            <div class="col-sm-12">
+                B. <span id="answer-b"></span>
+            </div>
+            <div class="col-sm-12">
+                C. <span id="answer-c"></span>
+            </div>
+            <div class="col-sm-12">
+                D. <span id="answer-d"></span>
             </div>
         </div>
     </div>

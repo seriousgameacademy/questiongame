@@ -93,5 +93,12 @@ io.on('connection', function (socket) {
         if (questions.length > questionselected) {
             questionselected++;
         }
+
+        updateGameState('question');
     })
+
+    function updateGameState(gamestate) {
+        var data = { state: gamestate, username: socket.username };
+        socket.emit('setGameState', data);
+    }
 });
