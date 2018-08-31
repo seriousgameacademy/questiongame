@@ -3,7 +3,7 @@
 //init variables
 
 var questionselected = -1;
-var gamestate = "start"; // start, waiting, question, questionresult, end
+var gamestate = "start"; // start, waiting, question, questionresult, gameover
 var totalplayer = 0;
 
 var app = require('express')();
@@ -59,6 +59,9 @@ io.on('connection', function (socket) {
                     socket.emit('newquestion', data);
                     updateGameStateSocket('question');
                 }
+                if (gamestate == 'gameover') {
+                    updateGameStateSocket('gameover');
+                }
             }
 
             socket.emit('userSet', { username: socket.username });
@@ -91,10 +94,17 @@ io.on('connection', function (socket) {
     socket.on('getQuestion', function (data) {
         //Send next question to everyone
         var questions = getQuestions();
+        var index = questions.length - 1;
 
-        if (questions.length > questionselected) {
+        if (index == questionselected) {
+            updateGameStateAll('gameover');
+            return;
+        }
+
+        if (index > questionselected) {
             questionselected++;
         }
+        
         
         var data = { question: questions[questionselected], questionselected: questionselected }
         console.log(data);

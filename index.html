@@ -86,6 +86,18 @@
         color: white;
     }
 
+    .overlay-gameover {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background-color: #27abde;
+        text-align: center;
+        color: white;
+    }
+
     /*.btn {
         display: inline-block;
         padding: 6px 12px;
@@ -219,8 +231,10 @@
         $('#admin-start-container').hide();
         $('#login-container').hide();
         $('#player-welcome-container').hide();
+        $('#player-question-container').hide();
         $('#player-question-nok-container').hide();
         $('#player-question-ok-container').hide();
+        $('#player-gameover-container').hide();
 
         // Show
         if (state == 'question' && mode != 'player') {
@@ -229,6 +243,12 @@
         if (state == 'question' && mode == 'player') {
             $('#player-question-container').show();
         }
+        if (state == 'gameover' && mode == 'admin') {
+            $('#admin-status-message').html("");
+        }
+
+
+
     }
 
     socket.on('setAdminStatusMessage', function (data) {
@@ -406,6 +426,22 @@
             </div>
         </div>
     </div>
+    <div id="player-gameover-container" style="display: none;" class="container">
+        <div class="row row-centered" style="margin-top:30px;">
+            <div class="col-sm-12 text-center">
+                <h1>GAME OVER</h1>
+            </div>
+            <div class="col-sm-12 text-center">
+                <div class="text-center" style="margin-bottom:25px">
+                    <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class="" />
+                </div>
+            </div>
+        </div>
+        <div class="footer" style="height: 150px;">
+            
+        </div>
+    </div>
+
     <div id="admin-container" class="container">
         <div class="row justify-content-center align-self-center" style="margin-top:30px;">
             <div class="col-sm-4">
