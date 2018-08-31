@@ -62,6 +62,30 @@
         /*display: none;*/
     }
 
+    .overlay-ok {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background-color: seagreen;
+        text-align: center;
+        color: white;
+    }
+
+    .overlay-nok {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background-color: darkred;
+        text-align: center;
+        color: white;
+    }
+
     /*.btn {
         display: inline-block;
         padding: 6px 12px;
@@ -86,7 +110,6 @@
         border-style: solid;
         border-width: 2px;
     }*/
-
     .btn-block-custom {
         display: block;
         width: auto;
@@ -110,7 +133,7 @@
         display:none;
     }
 
-    #player-container {
+    #player-welcome-container {
         display: none;
     }
 
@@ -128,18 +151,22 @@
 <script>   
 
     var socket = io();
+    var questionselected = 0;
+    var mode = null;
+    var currentQuestionAnswer;
     function setUsername() {
         socket.username = document.getElementById('name').value
         socket.emit('setUsername', document.getElementById('name').value);
         $("#error-container").hide();
     };
     socket.on('setScreenType', function (data) {
+        mode = data.type;
         if (data.type == 'player') {
-            $("#player-container").show();
+            $("#player-welcome-container").show();
             $("#admin-container").hide();
             return;
         }
-        $("#player-container").hide();
+        $("#player-welcome-container").hide();
         $("#admin-container").show();
     });
 
@@ -159,29 +186,76 @@
         }
     }
 
-    function startQuestions() {
+    function getQuestion() {
        socket.emit('getQuestion');
     }
 
+    function getQuestionResult() {
+
+    } 
+
     socket.on('newquestion', function (data) {
         console.log(data);
-        $('#question-question').html(data.question.question);
-        $('#answer-a').html(data.question.A);
-        $('#answer-b').html(data.question.B);
-        $('#answer-c').html(data.question.C);
-        $('#answer-d').html(data.question.D);
+        
+        if (mode == 'admin') {
+            $('#question-question').html(data.question.question);
+            $('#answer-a').html(data.question.A);
+            $('#answer-b').html(data.question.B);
+            $('#answer-c').html(data.question.C);
+            $('#answer-d').html(data.question.D);
+            $('#question-number').html((data.questionselected + 1));
+        }
+        questionselected = data.questionselected;
+        currentQuestionAnswer = data.question.Correct;
     })
 
     socket.on('setGameState', function (data) {
+        setGameState(data.state)
+    })
+
+    function setGameState(state) {
         // Hide all
         $('#admin-question-container').hide();
         $('#admin-start-container').hide();
+        $('#login-container').hide();
+        $('#player-welcome-container').hide();
+        $('#player-question-nok-container').hide();
+        $('#player-question-ok-container').hide();
 
         // Show
-        if (data.state == 'question' && data.username == 'admin') {
+        if (state == 'question' && mode != 'player') {
             $('#admin-question-container').show();
         }
+        if (state == 'question' && mode == 'player') {
+            $('#player-question-container').show();
+        }
+    }
+
+    socket.on('setAdminStatusMessage', function (data) {
+        setAdminStatusMessage(data.message);
     })
+
+    function setAdminStatusMessage(message) {
+        if (message != null) {
+            $('#admin-status-message').html(('<h1>' + message + '</h1>'));
+        }
+    }
+
+    function setAnswer(answer) {
+        $('#player-question-container').hide();
+        $('#player-question-ok-container').hide();
+        $('#player-question-nok-container').hide();
+
+        if (currentQuestionAnswer == answer) {
+            $('#player-question-ok-container').show();
+        }
+        else {
+            $('#player-question-nok-container').show();
+        }
+        
+        var data = { answer: answer, questionselected: questionselected } 
+        socket.emit('setSocketQuestionAnswer', data);
+    }
 
     socket.on('newmsg', function (data) {
         if (socket.username) {
@@ -211,13 +285,13 @@
             </div>
             <div class="col-sm-3">
                 <div class="text-center" style="margin-bottom:25px">
-                    <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class=""/>
+                    <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class="" />
                 </div>
                 <div class="text-center">
                     <form>
                         <div class="form-group">
-                            <input id="name"  class="form-control" type="text" name="name" value="" maxlength="30" aria-describedby="emailHelp" placeholder="Vul in je naam!">
-                            
+                            <input id="name" class="form-control" type="text" name="name" value="" maxlength="30" aria-describedby="emailHelp" placeholder="Vul in je naam!">
+
                             <small id="emailHelp" class="form-text text-muted">We'll never share your name with anyone else...;-) watch the big screen!</small>
                         </div>
 
@@ -233,15 +307,15 @@
             </div>
         </div>
     </div>
-    <div id="player-container">
+    <div id="player-welcome-container">
         <div id="message-container-welkom" class="message-welkom">
             <div id="message-welkom-text"></div>
             <div id="message-welkom-user"></div>
         </div>
-        
+
 
         <div class="spinner" style="display:none;">
-            <svg class="lds-balls" width="60%" height="60%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+            <svg class="lds-balls" width="50%" height="50%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
                 <circle cx="70.7111" cy="62.7851" r="10" fill="#337ab7">
                     <animate attributeName="cx" values="80;59.270509831248425" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
                     <animate attributeName="cy" values="50;78.53169548885461" keyTimes="0;1" dur="1s" repeatCount="indefinite"></animate>
@@ -270,20 +344,65 @@
             </svg>
         </div>
         <div class="start-message" style="display:none; text-align:center;">
-            Het spel gaat zo beginnen...
+            <h3>Het spel gaat zo beginnen...</h3>
         </div>
-        <div class="footer"style="display: none;">
+
+    </div>
+    <div id="player-question-container" style="display: none;" class="container">
+        <div class="row row-centered" style="margin-top:30px;">
+            <div class="col-sm-12 text-center">
+                <svg style="margin-bottom:25px; width: 150px;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 252 252"><g transform="translate(13.734,13.734) scale(0.891,0.891)"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="none" stroke-linecap="butt" stroke-linejoin="none" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g id="Layer_1 1" stroke="#ffffff" stroke-width="31" stroke-linejoin="round"><g id="surface1_33_ 1"><path d="M231,126c0,57.981 -47.019,105 -105,105c-57.981,0 -105,-47.019 -105,-105c0,-57.981 47.019,-105 105,-105c57.981,0 105,47.019 105,105z" fill="#2196f3"></path><path d="M134.19,167.244c2.46225,2.48325 3.69075,5.64375 3.69075,9.47625c0,3.7695 -1.21275,6.888 -3.612,9.35025c-2.42025,2.46225 -5.58075,3.69075 -9.51825,3.69075c-3.95325,0 -7.11375,-1.2285 -9.534,-3.69075c-2.4045,-2.457 -3.612,-5.5755 -3.612,-9.35025c0,-3.83775 1.2285,-6.993 3.69075,-9.47625c2.46225,-2.50425 5.6175,-3.73275 9.43425,-3.73275c3.7905,0 7.014,1.2705 9.4605,3.73275z" fill="#e3f2fd"></path><path d="M162.7815,100.0965c0,4.59375 -1.04475,8.94075 -3.1185,13.041c-2.05275,4.07925 -5.68575,8.61525 -10.83075,13.5975l-6.6255,6.25275c-4.14225,3.9585 -6.50475,8.57325 -7.098,13.88625l-0.33075,5.37075h-20.895c0,-7.58625 0.924,-14.049 2.78775,-18.53775c1.848,-4.48875 5.229,-8.91975 10.1535,-13.26675c4.91925,-4.368 8.2005,-7.91175 9.82275,-10.64175c1.64325,-2.72475 2.44125,-5.6175 2.44125,-8.652c0,-9.1665 -4.22625,-13.73925 -12.7155,-13.73925c-4.0215,0 -7.26075,1.2285 -9.66,3.71175c-2.42025,2.457 -3.69075,5.86425 -3.79575,10.19025l-0.042,3.69075h-23.625v-5.25h0.084c0.4095,-9.576 3.73275,-17.18325 9.9855,-22.722c6.59925,-5.84325 15.624,-8.778 27.048,-8.778c11.529,0 20.46975,2.76675 26.8485,8.3265c6.35775,5.55975 9.534,13.39275 9.5655,23.52z" fill="#e3f2fd"></path></g></g><path d="M0,252v-252h252v252z" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><g id="Layer_1" stroke="none" stroke-width="1" stroke-linejoin="miter"><g id="surface1_33_"><path d="M231,126c0,57.981 -47.019,105 -105,105c-57.981,0 -105,-47.019 -105,-105c0,-57.981 47.019,-105 105,-105c57.981,0 105,47.019 105,105z" fill="#2196f3"></path><path d="M124.7295,163.51125c-3.81675,0 -6.972,1.2285 -9.43425,3.73275c-2.46225,2.48325 -3.69075,5.6385 -3.69075,9.47625c0,3.77475 1.2075,6.89325 3.612,9.35025c2.42025,2.46225 5.58075,3.69075 9.534,3.69075c3.9375,0 7.098,-1.2285 9.51825,-3.69075c2.39925,-2.46225 3.612,-5.58075 3.612,-9.35025c0,-3.8325 -1.2285,-6.993 -3.69075,-9.47625c-2.4465,-2.46225 -5.67,-3.73275 -9.4605,-3.73275z" fill="#e3f2fd"></path><path d="M153.216,76.5765c-6.37875,-5.55975 -15.3195,-8.3265 -26.8485,-8.3265c-11.424,0 -20.44875,2.93475 -27.048,8.778c-6.25275,5.53875 -9.576,13.146 -9.9855,22.722h-0.084v5.25h23.625l0.042,-3.69075c0.105,-4.326 1.3755,-7.73325 3.79575,-10.19025c2.39925,-2.48325 5.6385,-3.71175 9.66,-3.71175c8.48925,0 12.7155,4.57275 12.7155,13.73925c0,3.0345 -0.798,5.92725 -2.44125,8.652c-1.62225,2.73 -4.9035,6.27375 -9.82275,10.64175c-4.9245,4.347 -8.3055,8.778 -10.1535,13.26675c-1.86375,4.48875 -2.78775,10.9515 -2.78775,18.53775h20.895l0.33075,-5.37075c0.59325,-5.313 2.95575,-9.92775 7.098,-13.88625l6.6255,-6.25275c5.145,-4.98225 8.778,-9.51825 10.83075,-13.5975c2.07375,-4.10025 3.1185,-8.44725 3.1185,-13.041c-0.0315,-10.12725 -3.20775,-17.96025 -9.5655,-23.52z" fill="#e3f2fd"></path></g></g><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path></g></g></svg>
+            </div>
+            <div class="col-sm-12 text-center">
+                <h2>Welk antwoord is goed?</h2>
+            </div>
+        </div>
+        <div class="footer">
             <div>
-                <a href="javascript:void(0);" class="btn btn-info btn-block-custom" target="_self">Antwoord A</a>
+                <a href="javascript:void(0);" onclick="setAnswer('A');" class="btn btn-info btn-block-custom" target="_self">Antwoord A</a>
             </div>
             <div>
-                <a href="javascript:void(0);" class="btn btn-info btn-block-custom" target="_self">Antwoord B</a>
+                <a href="javascript:void(0);" onclick="setAnswer('B');" class="btn btn-info btn-block-custom" target="_self">Antwoord B</a>
             </div>
             <div>
-                <a href="javascript:void(0);" class="btn btn-info btn-block-custom" target="_self">Antwoord C</a>
+                <a href="javascript:void(0);" onclick="setAnswer('C');;" class="btn btn-info btn-block-custom" target="_self">Antwoord C</a>
             </div>
             <div>
-                <a href="javascript:void(0);" class="btn btn-info btn-block-custom" target="_self">Antwoord D</a>
+                <a href="javascript:void(0);" onclick="setAnswer('D');" class="btn btn-info btn-block-custom" target="_self">Antwoord D</a>
+            </div>
+        </div>
+
+    </div>
+    <div id="player-question-ok-container" style="display: none;" class="overlay-ok">
+        <div class="row row-centered" style="margin-top:30px;">
+            <div class="col-sm-12 text-center">
+                <svg style="width: 150px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48" version="1.1">
+                    <g id="surface1">
+                        <path style=" fill:#8BC34A;" d="M 37 6 L 11 6 C 8.238281 6 6 8.238281 6 11 L 6 37 C 6 39.761719 8.238281 42 11 42 L 37 42 C 39.761719 42 42 39.761719 42 37 L 42 11 C 42 8.238281 39.761719 6 37 6 Z "></path>
+                        <path style=" fill:#F1F8E9;" d="M 11 11 L 37 11 L 37 37 L 11 37 Z "></path>
+                        <path style=" fill:#558B2F;" d="M 13.355469 23.4375 L 16.183594 20.609375 L 24.667969 29.097656 L 21.839844 31.925781 Z "></path>
+                        <path style=" fill:#558B2F;" d="M 18.929688 29.015625 L 31.660156 16.285156 L 34.644531 19.269531 L 21.917969 32 Z "></path>
+                    </g>
+                </svg>
+            </div>
+            <div class="col-sm-12 text-center">
+                <h2>Het antwoord is GOED!</h2>
+            </div>
+        </div>
+    </div>
+    <div id="player-question-nok-container" style="display: none;" class="overlay-nok">
+        <div class="row row-centered" style="margin-top:30px;">
+            <div class="col-sm-12 text-center">
+                <svg style="width: 150px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48" version="1.1">
+                    <g id="surface1">
+                        <path style=" fill:#F44336;" d="M 42 37 C 42 39.761719 39.761719 42 37 42 L 11 42 C 8.238281 42 6 39.761719 6 37 L 6 11 C 6 8.238281 8.238281 6 11 6 L 37 6 C 39.761719 6 42 8.238281 42 11 Z "></path>
+                        <path style=" fill:#FFEBEE;" d="M 16.828125 34 L 14 31.171875 L 31 14.171875 L 33.828125 17 Z "></path>
+                        <path style=" fill:#FFEBEE;" d="M 34.023438 30.945313 L 31.195313 33.773438 L 14.105469 16.679688 L 16.933594 13.851563 Z "></path>
+                    </g>
+                </svg>
+            </div>
+            <div class="col-sm-12 text-center">
+                <h2>Het antwoord is FOUT!</h2>
             </div>
         </div>
     </div>
@@ -322,7 +441,7 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="text-center">
-                            <button type="button" name="button" class="btn btn-info btn-lg btn-block" onclick="startQuestions()">Let's Play</button>
+                            <button type="button" name="button" class="btn btn-info btn-lg btn-block" onclick="getQuestion()">Let's Play</button>
                         </div>
                     </div>
                 </div>
@@ -332,23 +451,61 @@
         <div id="admin-question-container" class="row" style="display:none;" align-items-start>
             <div class="col-sm-12">
                 <div>
-                    <h2>Vraag: <span id="question-number"></span></h2>
+                    <h1>Vraag <span id="question-number"></span>:</h1>
                 </div>
             </div>
             <div class="col-sm-12">
-                <div id="question-question"></div>
+                <h1><div id="question-question"></div></h1>
             </div>
             <div class="col-sm-12">
-                A. <span id="answer-a"></span>
+                <h3>
+                    A. <span id="answer-a"></span>
+                </h3>
             </div>
             <div class="col-sm-12">
-                B. <span id="answer-b"></span>
+                <h3>
+                    B. <span id="answer-b"></span>
+                </h3>
             </div>
             <div class="col-sm-12">
-                C. <span id="answer-c"></span>
+                <h3>
+                    C. <span id="answer-c"></span>
+                </h3>
             </div>
             <div class="col-sm-12">
-                D. <span id="answer-d"></span>
+                <h3>
+                    D. <span id="answer-d"></span>
+                </h3>
+            </div>
+            <div class="col-sm-12">
+                &nbsp;
+            </div>
+            <div class="col-sm-12">
+                <div class="text-center">
+                    <button type="button" name="button" class="btn btn-info btn-lg" onclick="getQuestion()">Volgende</button>
+                </div>
+            </div>
+        </div>
+        <div id="admin-result-question-container" class="row" style="display:none;" align-items-start>
+            <div class="col-sm-12">
+                <div>
+                    Hier komt staafdiagram
+                </div>
+            </div>
+            <div class="col-sm-12">
+                &nbsp;
+            </div>
+            <div class="col-sm-12">
+                <div class="text-center">
+                    <button type="button" name="button" class="btn btn-info btn-lg" onclick="toonResultaat()">Volgende</button>
+                </div>
+            </div>
+        </div>
+        <div class="footer" style="height: 150px;">
+            <div class="col-sm-12">
+                <div id="admin-status-message" class="text-center" style="padding-top: 50px;">
+
+                </div>
             </div>
         </div>
     </div>

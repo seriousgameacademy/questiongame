@@ -1,15 +1,8 @@
 'use strict';
 
 //init variables
-var questions = [];
-var question1 = { question: "In welk jaar werd de Zuiderzee afgesloten en noemde men het onstane water, het IJsselmeer?", type: 'multiple', A: "1870", B: "1916", C: "1932", D: "1945", Correct: "C" }
-var question2 = { question: "Waar heeft Flevoland zijn naam aan te danken?", A: "Bij de watersnoodramp van 1916 kwam de familie Flevo om", type: 'multiple', B: "Johan Flevo (1785-1837) was een pionier op het gebied van drooglegging", C: "De Romeinen noemden het meer dat destijds op die plek lag het Flevomeer", D: "Flevo betekent in het Latijn 'vloed'", Correct: "D" }
-var question3 = { question: "Waarom is Flevoland omgeven door een strook water?", A: "De grond van de omliggende provincies is te zacht", type: 'multiple', B: "Anders kregen omliggende provincies grondwaterproblemen", C: "Het tussengelegen water dient ter verkoeling voor de toeristen", D: "Ter afbakening van de provinciegrenzen", Correct: "B" }
-questions.push(question1);
-questions.push(question2);
-questions.push(question3);
-var questionselected = 1;
 
+var questionselected = -1;
 var gamestate = "start"; // start, waiting, question, questionresult, end
 var totalplayer = 0;
 
@@ -49,12 +42,23 @@ io.on('connection', function (socket) {
             users.push(socket.username);
             
             if (socket.username == 'admin') {
+                questionselected = -1;
+                gamestate = "start";
                 socket.emit('setScreenType', { type: 'admin' })
+                setAdminStatusMessage('Wachten op spelers...');
             }
             else {
                 players++;
                 socket.emit('setScreenType', { type: 'player' })
                 socket.emit('welkommsg', { message: 'Welkom!', username: socket.username });
+                console.log(gamestate);
+                if (gamestate == 'question') {
+                    var questions = getQuestions();
+                    var data = { question: questions[questionselected], questionselected: questionselected }
+                    console.log(data);
+                    socket.emit('newquestion', data);
+                    updateGameStateSocket('question');
+                }
             }
 
             socket.emit('userSet', { username: socket.username });
@@ -86,19 +90,45 @@ io.on('connection', function (socket) {
     })
     socket.on('getQuestion', function (data) {
         //Send next question to everyone
-        var data = { question: questions[questionselected]  }
-        console.log(data);
-        io.sockets.emit('newquestion', data);
+        var questions = getQuestions();
 
         if (questions.length > questionselected) {
             questionselected++;
         }
+        
+        var data = { question: questions[questionselected], questionselected: questionselected }
+        console.log(data);
+        io.sockets.emit('newquestion', data);
 
-        updateGameState('question');
+        updateGameStateAll('question');
+        setAdminStatusMessage('Weet jij het goede antwoord?...');
     })
 
-    function updateGameState(gamestate) {
+    function updateGameStateAll(state) {
+        var data = { state: state, username: socket.username };
+        io.sockets.emit('setGameState', data);
+        gamestate = state;
+    }
+
+    function updateGameStateSocket(gamestate) {
         var data = { state: gamestate, username: socket.username };
         socket.emit('setGameState', data);
+    }
+
+    function setAdminStatusMessage(message) {
+        var data = { message: message };
+        socket.emit('setAdminStatusMessage', data);
+    }
+
+    function getQuestions() {
+        var questions = [];
+        var question1 = { question: "In welk jaar werd de Zuiderzee afgesloten en noemde men het onstane water, het IJsselmeer?", type: 'multiple', A: "1870", B: "1916", C: "1932", D: "1945", Correct: "C" }
+        var question2 = { question: "Waar heeft Flevoland zijn naam aan te danken?", A: "Bij de watersnoodramp van 1916 kwam de familie Flevo om", type: 'multiple', B: "Johan Flevo (1785-1837) was een pionier op het gebied van drooglegging", C: "De Romeinen noemden het meer dat destijds op die plek lag het Flevomeer", D: "Flevo betekent in het Latijn 'vloed'", Correct: "D" }
+        var question3 = { question: "Waarom is Flevoland omgeven door een strook water?", A: "De grond van de omliggende provincies is te zacht", type: 'multiple', B: "Anders kregen omliggende provincies grondwaterproblemen", C: "Het tussengelegen water dient ter verkoeling voor de toeristen", D: "Ter afbakening van de provinciegrenzen", Correct: "B" }
+        questions.push(question1);
+        questions.push(question2);
+        questions.push(question3);
+
+        return questions;
     }
 });
