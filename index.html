@@ -243,10 +243,12 @@
         if (state == 'question' && mode == 'player') {
             $('#player-question-container').show();
         }
-        if (state == 'gameover' && mode == 'admin') {
-            $('#admin-status-message').html("");
+        if (state == 'gameover' && mode == 'player') {
+            $('#player-gameover-container').show();
         }
-
+        if (state == 'gameover' && mode == 'admin') {
+            $('#admin-status-message').html("<h1>GAME OVER</h1>");
+        }
 
 
     }
