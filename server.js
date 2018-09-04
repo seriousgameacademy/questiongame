@@ -4,7 +4,7 @@
 
 var questionselected = -1;
 var gamestate = "start"; // start, waiting, question, questionresult, gameover
-var totalplayer = 0;
+var totalplayers = 0;
 
 var app = require('express')();
 var path = require('path');
@@ -23,66 +23,69 @@ server.listen(port, () => {
 });
 
 var io = require('socket.io')(server);
-
-
-var players = 0;
 var users = [];
 
 io.on('connection', function (socket) {
     console.log('A user connected');
+    if (socket.username != null && socket.username != "") {
+        CheckGameState();
+    }
 
     socket.on('setUsername', function (username) {
-        socket.username = username;
-
-        console.log(socket.username);
-
-        if (users.indexOf(socket.username) > -1) {
-            socket.emit('userExists', username + ' naam bestaat al! Probeer een andere naam.');
+        
+        if (users.indexOf(username) > -1) {
+            socket.emit('userExists', 'Speler ' + username + ' bestaat al! Probeer een andere naam.');
+            console.log(users);
         } else {
+            socket.username = username;
             users.push(socket.username);
             
             if (socket.username == 'admin') {
                 questionselected = -1;
                 gamestate = "start";
+                totalplayers = 0;
                 socket.emit('setScreenType', { type: 'admin' })
                 setAdminStatusMessage('Wachten op spelers...');
             }
             else {
-                players++;
+                totalplayers++;
                 socket.emit('setScreenType', { type: 'player' })
                 socket.emit('welkommsg', { message: 'Welkom!', username: socket.username });
                 console.log(gamestate);
-                if (gamestate == 'question') {
-                    var questions = getQuestions();
-                    var data = { question: questions[questionselected], questionselected: questionselected }
-                    console.log(data);
-                    socket.emit('newquestion', data);
-                    updateGameStateSocket('question');
-                }
-                if (gamestate == 'gameover') {
-                    updateGameStateSocket('gameover');
-                }
+
+                CheckGameState();
             }
 
+            console.log(users);
+
             socket.emit('userSet', { username: socket.username });
-            var data = { message: (socket.username + ' doet ook mee!'), players: players.toString() };
+            var data = { message: (socket.username + ' doet ook mee!'), players: totalplayers.toString() };
             console.log(data);
             socket.broadcast.emit('clientconnectmsg', data );
         }
 
         socket.on('disconnect', function () {
             if (socket.username != 'admin') {
-                players--;
+                if (totalplayers > 0) {
+                    totalplayers--;
+                }
             }
 
-            var index = users.indexOf(socket.username);
+            if (socket.username != null && socket.username != "") {
+                var index = users.indexOf(socket.username);
 
-            if (index != -1) {
+                if (index != -1) {
 
-                users.splice(index, 1);
+                    users.splice(index, 1);
+                }
+
+                console.log(socket.username + ' disconnected.');
             }
-
-            console.log(socket.username + ' disconnected.');
+            else {
+                console.log('User disconnected.');
+            }
+            
+            console.log(users);
         });
     });
 
@@ -118,6 +121,19 @@ io.on('connection', function (socket) {
         var data = { state: state, username: socket.username };
         io.sockets.emit('setGameState', data);
         gamestate = state;
+    }
+
+    function CheckGameState() {
+        if (gamestate == 'question') {
+            var questions = getQuestions();
+            var data = { question: questions[questionselected], questionselected: questionselected }
+            console.log(data);
+            socket.emit('newquestion', data);
+            updateGameStateSocket('question');
+        }
+        if (gamestate == 'gameover') {
+            updateGameStateSocket('gameover');
+        }
     }
 
     function updateGameStateSocket(gamestate) {
