@@ -228,7 +228,7 @@
     function setGameState(state) {
         // Hide all
         $('#admin-question-container').hide();
-        $('#admin-start-container').hide();
+        $('.admin-start-container').hide();
         $('#login-container').hide();
         $('#player-welcome-container').hide();
         $('#player-question-container').hide();
@@ -449,24 +449,13 @@
             <div class="col-sm-4">
 
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div class="text-center" style="margin-bottom:25px">
                     <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class="" />
                 </div>
             </div>
             <div class="col-sm-4">
-
-            </div>
-        </div>
-        <div id="admin-start-container" class="row" align-items-start>
-            <div class="col-sm-8">
-                <div id="message-send-container">
-                    <input type="text" id="message"><button type="button" name="button" onclick="sendMessage()">Send</button>
-                </div>
-                <h4><div id="message-container"></div></h4>
-            </div>
-            <div class="col-sm-4">
-                <div class="row">
+                <div class="row admin-start-container">
                     <div class="col-sm-12">
                         <div class="text-center">
                             <h2>Totaal aantal spelers:</h2>
@@ -483,7 +472,26 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row admin-start-container" align-items-start>
+            <div class="col-sm-8">
+                <h4><div id="message-container"></div></h4>
+            </div>
+            <div class="col-sm-4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="text-center">
+                            <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/QRcode_swifhr.png" width="300px" />
+                        </div>
 
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="text-center" style="margin: 25px;">
+                        <h1>www.swifhr.nl</h1>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="admin-question-container" class="row" style="display:none;" align-items-start>

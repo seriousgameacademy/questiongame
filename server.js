@@ -27,10 +27,7 @@ var users = [];
 
 io.on('connection', function (socket) {
     console.log('A user connected');
-    if (socket.username != null && socket.username != "") {
-        CheckGameState();
-    }
-
+    
     socket.on('setUsername', function (username) {
         
         if (users.indexOf(username) > -1) {
