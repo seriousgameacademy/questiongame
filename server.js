@@ -4,7 +4,6 @@
 
 var questionselected = -1;
 var gamestate = "start"; // start, waiting, question, questionresult, gameover
-var totalplayers = 0;
 
 var app = require('express')();
 var path = require('path');
@@ -27,9 +26,9 @@ var users = [];
 
 io.on('connection', function (socket) {
     console.log('A user connected');
-    
+    CheckGameState();
+
     socket.on('setUsername', function (username) {
-        
         if (users.indexOf(username) > -1) {
             socket.emit('userExists', 'Speler ' + username + ' bestaat al! Probeer een andere naam.');
             console.log(users);
@@ -40,34 +39,35 @@ io.on('connection', function (socket) {
             if (socket.username == 'admin') {
                 questionselected = -1;
                 gamestate = "start";
-                totalplayers = 0;
                 socket.emit('setScreenType', { type: 'admin' })
                 setAdminStatusMessage('Wachten op spelers...');
+                
             }
             else {
-                totalplayers++;
                 socket.emit('setScreenType', { type: 'player' })
                 socket.emit('welkommsg', { message: 'Welkom!', username: socket.username });
                 console.log(gamestate);
-
-                CheckGameState();
             }
-
+            
             console.log(users);
 
             socket.emit('userSet', { username: socket.username });
-            var data = { message: (socket.username + ' doet ook mee!'), players: totalplayers.toString() };
-            console.log(data);
-            socket.broadcast.emit('clientconnectmsg', data );
+
+            if (socket.username != 'admin') {
+                var data1 = { message: (socket.username + ' doet ook mee!') };
+                console.log(data1);
+                io.sockets.emit('clientconnectmsg', data1);
+            }
+
+            var totalplayers = users.length - 1; // Do not count admin
+            var data2 = { players: totalplayers.toString() };
+            console.log(data2);
+            io.sockets.emit('totalamountplayers', data2);
+
+            CheckGameState();
         }
 
         socket.on('disconnect', function () {
-            if (socket.username != 'admin') {
-                if (totalplayers > 0) {
-                    totalplayers--;
-                }
-            }
-
             if (socket.username != null && socket.username != "") {
                 var index = users.indexOf(socket.username);
 
@@ -85,7 +85,6 @@ io.on('connection', function (socket) {
             console.log(users);
         });
     });
-
     socket.on('msg', function (data) {
         //Send message to everyone
         console.log(data);
@@ -104,8 +103,7 @@ io.on('connection', function (socket) {
         if (index > questionselected) {
             questionselected++;
         }
-        
-        
+
         var data = { question: questions[questionselected], questionselected: questionselected }
         console.log(data);
         io.sockets.emit('newquestion', data);
@@ -114,19 +112,39 @@ io.on('connection', function (socket) {
         setAdminStatusMessage('Weet jij het goede antwoord?...');
     })
 
+    socket.on('getQuestionResult', function (data) {
+        getQuestionResult();
+    })
+
     function updateGameStateAll(state) {
         var data = { state: state, username: socket.username };
         io.sockets.emit('setGameState', data);
         gamestate = state;
     }
 
+    function getQuestionResult() {
+        var questions = getQuestions();
+        var data = { question: questions[questionselected], questionselected: questionselected, answerA: 10, answerB: 55, answerC: 5, answerD: 30 }
+        console.log(data);
+        io.sockets.emit('setAnswerResult', data);
+        updateGameStateAll('answer');
+        setAdminStatusMessage('Antwoord ' + questions[questionselected].Correct + ' is het JUISTE antwoord...');
+    }
+
     function CheckGameState() {
+        if (gamestate == 'start') {
+            updateGameStateSocket('start');
+        }
         if (gamestate == 'question') {
             var questions = getQuestions();
             var data = { question: questions[questionselected], questionselected: questionselected }
             console.log(data);
             socket.emit('newquestion', data);
             updateGameStateSocket('question');
+        }
+        if (gamestate == 'answer') {
+            getQuestionResult();
+            updateGameStateSocket('answer');
         }
         if (gamestate == 'gameover') {
             updateGameStateSocket('gameover');

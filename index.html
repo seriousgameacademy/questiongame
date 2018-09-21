@@ -98,30 +98,47 @@
         color: white;
     }
 
-    /*.btn {
-        display: inline-block;
-        padding: 6px 12px;
-        margin-bottom: 0;
-        font-size: 2em;
-        font-weight: normal;
-        line-height: 1.42857143;
-        text-align: center;
-        white-space: nowrap;
-        vertical-align: middle;
-        -ms-touch-action: manipulation;
-        touch-action: manipulation;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        background-image: none;
-        border: 1px solid transparent; 
-        border-radius: 4px;
-        box-shadow: 0 15px 15px -20px rgba(0,0,0,0.5),0 4px 11px -3px rgba(0,0,0,0.25) !important;
-        border-style: solid;
-        border-width: 2px;
-    }*/
+    .bubble {
+        position: relative;
+        width: 430px;
+        height: 75px;
+        padding: 0px;
+        background: #FFFFFF;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        border: #000000 solid 4px;
+        color: #000000;
+        padding: 7px;
+        margin-bottom:15px;
+        font-size: 0.9em;
+    }
+
+        .bubble:after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 8px 33px 8px 0;
+            border-color: transparent #FFFFFF;
+            display: block;
+            width: 0;
+            z-index: 1;
+            left: -33px;
+            top: 14px;
+        }
+
+        .bubble:before {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 11px 36px 11px 0;
+            border-color: transparent #000000;
+            display: block;
+            width: 0;
+            z-index: 0;
+            left: -40px;
+            top: 11px;
+        }
     .btn-block-custom {
         display: block;
         width: auto;
@@ -157,6 +174,45 @@
         color: #337ab7;
         text-decoration: none;
     }
+
+    /* Make sure that padding behaves as expected */
+    * {
+        box-sizing: border-box
+    }
+
+    /* Container for skill bars */
+    .container-skill-bar {
+        width: 100%; /* Full width */
+        background-color: #ddd; /* Grey background */
+        margin-bottom: 10px;
+    }
+
+    .skills {
+        text-align: right; /* Right-align text */
+        padding: 5px; /* Add some padding */
+        color: white; /* White text color */
+    }
+
+    .answer-bar-a {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Green */
+    .answer-bar-b {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Blue */
+    .answer-bar-c {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Red */
+    .answer-bar-d {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Dark Grey */
 </style>
 
 
@@ -166,31 +222,13 @@
     var questionselected = 0;
     var mode = null;
     var currentQuestionAnswer;
+
     function setUsername() {
         socket.username = document.getElementById('name').value
         socket.emit('setUsername', document.getElementById('name').value);
         $("#error-container").hide();
     };
-    socket.on('setScreenType', function (data) {
-        mode = data.type;
-        if (data.type == 'player') {
-            $("#player-welcome-container").show();
-            $("#admin-container").hide();
-            return;
-        }
-        $("#player-welcome-container").hide();
-        $("#admin-container").show();
-    });
 
-    socket.on('userExists', function (data) {
-        $("#error-container").show();
-        $("#error-container").html(data);
-    });
-    socket.on('userSet', function (data) {
-        $("#login-container").hide();
-        $(".start-message").show();
-        $(".spinner").show();
-    });
     function sendMessage() {
         var msg = document.getElementById('message').value;
         if (msg) {
@@ -203,42 +241,31 @@
     }
 
     function getQuestionResult() {
-
-    } 
-
-    socket.on('newquestion', function (data) {
-        console.log(data);
-        
-        if (mode == 'admin') {
-            $('#question-question').html(data.question.question);
-            $('#answer-a').html(data.question.A);
-            $('#answer-b').html(data.question.B);
-            $('#answer-c').html(data.question.C);
-            $('#answer-d').html(data.question.D);
-            $('#question-number').html((data.questionselected + 1));
-        }
-        questionselected = data.questionselected;
-        currentQuestionAnswer = data.question.Correct;
-    })
-
-    socket.on('setGameState', function (data) {
-        setGameState(data.state)
-    })
+        socket.emit('getQuestionResult');
+    }
 
     function setGameState(state) {
         // Hide all
         $('#admin-question-container').hide();
+        $('#admin-result-question-container').hide();
+        $("#admin-container").hide();
         $('.admin-start-container').hide();
+        $('#admin-header-container').hide();
         $('#login-container').hide();
         $('#player-welcome-container').hide();
         $('#player-question-container').hide();
         $('#player-question-nok-container').hide();
         $('#player-question-ok-container').hide();
         $('#player-gameover-container').hide();
-
+        
         // Show
-        if (state == 'question' && mode != 'player') {
-            $('#admin-question-container').show();
+        if (mode == null) {
+            $('#login-container').show();
+            return;
+        }
+
+        if (state == 'start' && mode == 'player') {
+            $("#player-welcome-container").show();
         }
         if (state == 'question' && mode == 'player') {
             $('#player-question-container').show();
@@ -246,16 +273,30 @@
         if (state == 'gameover' && mode == 'player') {
             $('#player-gameover-container').show();
         }
+        if (state == 'start' && mode == 'admin') {
+            $("#admin-container").show();
+            $('.admin-start-container').show();
+            $('#admin-header-container').show();
+        }
+        
+        if (state == 'question' && mode == 'admin') {
+            $("#admin-container").show();
+            $('#admin-question-container').show();
+            $('#admin-header-container').show();
+        }
+        if (state == 'answer' && mode == 'admin') {
+            $("#admin-container").show();
+            $('#admin-result-question-container').show();
+            $('#admin-header-container').hide();
+        }
         if (state == 'gameover' && mode == 'admin') {
+            $("#admin-container").show();
+            $('#admin-header-container').show();
             $('#admin-status-message').html("<h1>GAME OVER</h1>");
         }
 
 
     }
-
-    socket.on('setAdminStatusMessage', function (data) {
-        setAdminStatusMessage(data.message);
-    })
 
     function setAdminStatusMessage(message) {
         if (message != null) {
@@ -274,10 +315,89 @@
         else {
             $('#player-question-nok-container').show();
         }
-        
-        var data = { answer: answer, questionselected: questionselected } 
+
+        var data = { answer: answer, questionselected: questionselected }
         socket.emit('setSocketQuestionAnswer', data);
     }
+
+    socket.on('newquestion', function (data) {
+        console.log(data);
+        
+        if (mode == 'admin') {
+            $('.question-question').html(data.question.question);
+            $('.answer-a').html(data.question.A);
+            $('.answer-b').html(data.question.B);
+            $('.answer-c').html(data.question.C);
+            $('.answer-d').html(data.question.D);
+            $('.question-number').html((data.questionselected + 1));
+        }
+        questionselected = data.questionselected;
+        currentQuestionAnswer = data.question.Correct;
+    })
+
+    socket.on('setAnswerResult', function (data) {
+        console.log(data);
+
+        if (mode == 'admin') {
+            $('.question-question').html(data.question.question);
+            $('.answer-a').html(data.question.A);
+            $('.answer-b').html(data.question.B);
+            $('.answer-c').html(data.question.C);
+            $('.answer-d').html(data.question.D);
+            $('.question-number').html((data.questionselected + 1));
+            $('#answer-result-percentage-a').html(data.answerA);
+            $('.answer-bar-a').css("width", (data.answerA + "%"))
+            $('.answer-bar-a').css("background-color", "#808080")
+            $('#answer-result-percentage-b').html(data.answerB);
+            $('.answer-bar-b').css("width", (data.answerB + "%"))
+            $('.answer-bar-b').css("background-color", "#808080")
+            $('#answer-result-percentage-c').html(data.answerC);
+            $('.answer-bar-c').css("width", (data.answerC + "%"))
+            $('.answer-bar-c').css("background-color", "#808080")
+            $('#answer-result-percentage-d').html(data.answerD);
+            $('.answer-bar-d').css("width", (data.answerD + "%"))
+            $('.answer-bar-d').css("background-color", "#808080")
+
+            if (data.question.Correct == "A") {
+                $('.answer-bar-a').css("background-color", "#96da7f")
+            }
+            if (data.question.Correct == "B") {
+                $('.answer-bar-b').css("background-color", "#96da7f")
+            }
+            if (data.question.Correct == "C") {
+                $('.answer-bar-c').css("background-color", "#96da7f")
+            }
+            if (data.question.Correct == "D") {
+                $('.answer-bar-d').css("background-color", "#96da7f")
+            }
+        }
+        questionselected = data.questionselected;
+        currentQuestionAnswer = data.question.Correct;
+    })
+
+    socket.on('setGameState', function (data) {
+        setGameState(data.state)
+    })
+    
+    socket.on('setAdminStatusMessage', function (data) {
+        setAdminStatusMessage(data.message);
+    })
+
+    socket.on('setScreenType', function (data) {
+        mode = data.type;
+        
+    })
+
+    socket.on('userExists', function (data) {
+        $("#error-container").show();
+        $("#error-container").html(data);
+    })
+
+    socket.on('userSet', function (data) {
+        $("#login-container").hide();
+        $(".start-message").show();
+        $(".spinner").show();
+    })
 
     socket.on('newmsg', function (data) {
         if (socket.username) {
@@ -285,17 +405,29 @@
                 data.user + '</b>: ' + data.message + '</div>'
         }
     })
+
     socket.on('welkommsg', function (data) {
         if (socket.username) {
             $("#message-welkom-text").html(data.message);
             $("#message-welkom-user").html(data.username);
         }
     })
+
     socket.on('clientconnectmsg', function (data) {
         if (socket.username) {
-            document.getElementById('message-container').innerHTML += '<div>' + data.message + '</div>';
-            $("#player-counter").html(data.players);
+            var bubble = $('.bubble').first()
+
+            if (bubble != null && bubble.length > 0) {
+                bubble.before('<div class="bubble">' + data.message + '</div>')
+                return;
+            }
+                
+            $('#message-container').html('<div class="bubble">' + data.message + '</div>');
         }
+    })
+
+    socket.on('totalamountplayers', function (data) {
+        $("#player-counter").html(data.players);
     })
 </script>
 
@@ -445,12 +577,12 @@
     </div>
 
     <div id="admin-container" class="container">
-        <div class="row justify-content-center align-self-center" style="margin-top:30px;">
+        <div id="admin-header-container" class="row justify-content-center align-self-center" style="margin-top:30px; display:none;">
             <div class="col-sm-4">
 
             </div>
             <div class="col-sm-4">
-                <div class="text-center" style="margin-bottom:25px">
+                <div id="admin-puppet-container" class="text-center" style="margin-bottom:25px" >
                     <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class="" />
                 </div>
             </div>
@@ -484,7 +616,6 @@
                         <div class="text-center">
                             <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/QRcode_swifhr.png" width="300px" />
                         </div>
-
                     </div>
                     <div class="col-sm-12">
                         <div class="text-center" style="margin: 25px;">
@@ -496,27 +627,58 @@
         </div>
         <div id="admin-question-container" class="row" style="display:none;" align-items-start>
             <div class="col-sm-12">
-                <h1><div>Vraag <span id="question-number"></span>: <span id="question-question"></span></div></h1>
+                <h1>Vraag <span class="question-number"></span>: <span class="question-question"></span></h1>
             </div>
             <div class="col-sm-12">
                 <h3>
-                    A. <span id="answer-a"></span>
+                    A. <span class="answer-a"></span>
                 </h3>
             </div>
             <div class="col-sm-12">
                 <h3>
-                    B. <span id="answer-b"></span>
+                    B. <span class="answer-b"></span>
                 </h3>
             </div>
             <div class="col-sm-12">
                 <h3>
-                    C. <span id="answer-c"></span>
+                    C. <span class="answer-c"></span>
                 </h3>
             </div>
             <div class="col-sm-12">
                 <h3>
-                    D. <span id="answer-d"></span>
+                    D. <span class="answer-d"></span>
                 </h3>
+            </div>
+            <div class="col-sm-12">
+                &nbsp;
+            </div>
+            <div class="col-sm-12">
+                <div class="text-center">
+                    <button type="button" name="button" class="btn btn-info btn-lg" onclick="getQuestionResult()">Toon resultaten</button>
+                </div>
+            </div>
+        </div>
+        <div id="admin-result-question-container" class="row" style="display:none; margin-top: 30px;" align-items-start>
+            <div class="col-sm-12" style="margin-bottom:15px;">
+                <h2>Vraag <span class="question-number"></span>: <span class="question-question"></span></h2>
+            </div>
+            <div class="col-sm-12">
+                <h4><span class="answer-a"></span></h4>
+                <div class="container-skill-bar">
+                    <div class="skills answer-bar-a"><span id="answer-result-percentage-a"></span>%</div>
+                </div>
+                <h4><span class="answer-b"></span></h4>
+                <div class="container-skill-bar">
+                    <div class="skills answer-bar-b"><span id="answer-result-percentage-b"></span>%</div>
+                </div>
+                <h4><span class="answer-c"></span></h4>
+                <div class="container-skill-bar">
+                    <div class="skills answer-bar-c"><span id="answer-result-percentage-c"></span>%</div>
+                </div>
+                <h4><span class="answer-d"></span></h4>
+                <div class="container-skill-bar">
+                    <div class="skills answer-bar-d"><span id="answer-result-percentage-d"></span>%</div>
+                </div>
             </div>
             <div class="col-sm-12">
                 &nbsp;
@@ -524,21 +686,6 @@
             <div class="col-sm-12">
                 <div class="text-center">
                     <button type="button" name="button" class="btn btn-info btn-lg" onclick="getQuestion()">Volgende</button>
-                </div>
-            </div>
-        </div>
-        <div id="admin-result-question-container" class="row" style="display:none;" align-items-start>
-            <div class="col-sm-12">
-                <div>
-                    Hier komt staafdiagram
-                </div>
-            </div>
-            <div class="col-sm-12">
-                &nbsp;
-            </div>
-            <div class="col-sm-12">
-                <div class="text-center">
-                    <button type="button" name="button" class="btn btn-info btn-lg" onclick="toonResultaat()">Volgende</button>
                 </div>
             </div>
         </div>
