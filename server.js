@@ -5,6 +5,10 @@
 var questionselected = -1;
 var gamestate = "start"; // start, waiting, question, questionresult, gameover
 var totalamountplayers = 0;
+var totalAnwers_A = 0;
+var totalAnwers_B = 0;
+var totalAnwers_C = 0;
+var totalAnwers_D = 0;
 var app = require('express')();
 var path = require('path');
 var port = process.env.PORT || 1337;
@@ -23,6 +27,7 @@ server.listen(port, () => {
 
 var io = require('socket.io')(server);
 var users = [];
+var answers = [];
 
 io.on('connection', function (socket) {
     console.log('A user connected');
@@ -101,7 +106,7 @@ io.on('connection', function (socket) {
         //Send next question to everyone
         var questions = getQuestions();
         var index = questions.length - 1;
-
+        
         if (index == questionselected) {
             updateGameStateAll('gameover');
             return;
@@ -109,10 +114,14 @@ io.on('connection', function (socket) {
 
         if (index > questionselected) {
             questionselected++;
+            if (questionselected == 0) {
+                //reset answers
+                answers = [];
+            }
         }
-
+        
         var data = { question: questions[questionselected], questionselected: questionselected }
-        console.log(data);
+        console.log("newquestion " + data);
         io.sockets.emit('newquestion', data);
 
         updateGameStateAll('question');
@@ -123,6 +132,10 @@ io.on('connection', function (socket) {
         getQuestionResult();
     })
 
+    socket.on('setSocketQuestionAnswer', function (data) {
+        answers.push(data);
+        console.log(answers);
+    })
     function updateGameStateAll(state) {
         var data = { state: state, username: socket.username };
         io.sockets.emit('setGameState', data);
@@ -131,7 +144,41 @@ io.on('connection', function (socket) {
 
     function getQuestionResult() {
         var questions = getQuestions();
-        var data = { question: questions[questionselected], questionselected: questionselected, answerA: 10, answerB: 55, answerC: 5, answerD: 30 }
+        var totalAnwers_A = 0;
+        var totalAnwers_B = 0;
+        var totalAnwers_C = 0;
+        var totalAnwers_D = 0;
+        var percentageAnswers_A = 0;
+        var percentageAnswers_B = 0;
+        var percentageAnswers_C = 0;
+        var percentageAnswers_D = 0;
+
+        console.log('selectedquestion ' + questionselected.toString());
+
+        for (var i = 0; i < answers.length; i++) {
+            if (answers[i].answer == 'A' && answers[i].questionselected == questionselected) {
+                totalAnwers_A = totalAnwers_A + 1;
+            }
+            if (answers[i].answer == 'B' && answers[i].questionselected == questionselected) {
+                totalAnwers_B = totalAnwers_B + 1;
+            }
+            if (answers[i].answer == 'C' && answers[i].questionselected == questionselected) {
+                totalAnwers_C = totalAnwers_C + 1;
+            }
+            if (answers[i].answer == 'D' && answers[i].questionselected == questionselected) {
+                totalAnwers_D = totalAnwers_D + 1;
+            }
+        }
+
+        var totalAnswers = totalAnwers_A + totalAnwers_B + totalAnwers_C + totalAnwers_D;
+        if (totalAnswers > 0) {
+            percentageAnswers_A = Math.round((totalAnwers_A / totalAnswers) * 100);
+            percentageAnswers_B = Math.round((totalAnwers_B / totalAnswers) * 100);
+            percentageAnswers_C = Math.round((totalAnwers_C / totalAnswers) * 100);
+            percentageAnswers_D = 100 - percentageAnswers_A - percentageAnswers_B - percentageAnswers_C;
+        }
+
+        var data = { question: questions[questionselected], questionselected: questionselected, answerA: percentageAnswers_A, answerB: percentageAnswers_B, answerC: percentageAnswers_C, answerD: percentageAnswers_D }
         console.log(data);
         io.sockets.emit('setAnswerResult', data);
         updateGameStateAll('answer');

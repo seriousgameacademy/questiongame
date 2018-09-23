@@ -321,9 +321,8 @@
         else {
             $('#player-question-nok-container').show();
         }
-
-        var data = { answer: answer, questionselected: questionselected }
-        socket.emit('setSocketQuestionAnswer', data);
+        
+        socket.emit('setSocketQuestionAnswer', { answer: answer, questionselected: questionselected, username: socket.username });
     }
 
     socket.on('newquestion', function (data) {
