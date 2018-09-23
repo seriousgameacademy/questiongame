@@ -4,7 +4,7 @@
 
 var questionselected = -1;
 var gamestate = "start"; // start, waiting, question, questionresult, gameover
-
+var totalamountplayers = 0;
 var app = require('express')();
 var path = require('path');
 var port = process.env.PORT || 1337;
@@ -41,12 +41,21 @@ io.on('connection', function (socket) {
                 gamestate = "start";
                 socket.emit('setScreenType', { type: 'admin' })
                 setAdminStatusMessage('Wachten op spelers...');
-                
+
+                totalamountplayers = 0;
+                var data_admin = { players: totalamountplayers };
+                console.log(data_admin);
+                io.sockets.emit('totalamountplayers', data_admin);
             }
             else {
                 socket.emit('setScreenType', { type: 'player' })
                 socket.emit('welkommsg', { message: 'Welkom!', username: socket.username });
                 console.log(gamestate);
+
+                totalamountplayers = totalamountplayers + 1;
+                var data_player = { players: totalamountplayers };
+                console.log(data_player);
+                io.sockets.emit('totalamountplayers', data_player);
             }
             
             console.log(users);
@@ -60,9 +69,7 @@ io.on('connection', function (socket) {
             }
 
             var totalplayers = users.length - 1; // Do not count admin
-            var data2 = { players: totalplayers.toString() };
-            console.log(data2);
-            io.sockets.emit('totalamountplayers', data2);
+            
 
             CheckGameState();
         }

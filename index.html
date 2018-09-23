@@ -222,6 +222,7 @@
     var questionselected = 0;
     var mode = null;
     var currentQuestionAnswer;
+    var totalamountplayers = 0;
 
     function setUsername() {
         socket.username = document.getElementById('name').value
@@ -432,7 +433,13 @@
     })
 
     socket.on('totalamountplayers', function (data) {
-        $("#player-counter").html(data.players);
+        if (data.players > totalamountplayers) {
+            $("#player-counter").html(data.players);
+            totalamountplayers = data.players;
+        }
+        if (data.players == 0) {
+            totalamountplayers = 0;
+        }
     })
 </script>
 
