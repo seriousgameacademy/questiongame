@@ -163,12 +163,14 @@ io.on('connection', function (socket) {
 
     function getQuestions() {
         var questions = [];
-        var question1 = { question: "In welk jaar werd de Zuiderzee afgesloten en noemde men het onstane water, het IJsselmeer?", type: 'multiple', A: "1870", B: "1916", C: "1932", D: "1945", Correct: "C" }
-        var question2 = { question: "Waar heeft Flevoland zijn naam aan te danken?", A: "Bij de watersnoodramp van 1916 kwam de familie Flevo om", type: 'multiple', B: "Johan Flevo (1785-1837) was een pionier op het gebied van drooglegging", C: "De Romeinen noemden het meer dat destijds op die plek lag het Flevomeer", D: "Flevo betekent in het Latijn 'vloed'", Correct: "D" }
-        var question3 = { question: "Waarom is Flevoland omgeven door een strook water?", A: "De grond van de omliggende provincies is te zacht", type: 'multiple', B: "Anders kregen omliggende provincies grondwaterproblemen", C: "Het tussengelegen water dient ter verkoeling voor de toeristen", D: "Ter afbakening van de provinciegrenzen", Correct: "B" }
+        var question1 = { question: "Wat zouden waarden voor Flevoland (SWiF) kunnen zijn?", type: 'multiple', A: "Creatief - Inspiratie - Ontdekken - Samenzijn", B: "Doelgericht - Effici&euml;nt - Kennis - Meesterschap", C: "Dienstbaar - Duurzaam - Pionieren - Veelzijdig", D: "Eenvoudigheid - Enthousiasme - Leraarschap - Waardering", Correct: "C" }
+        var question2 = { question: "Wat zou een goede formulering zijn van de essentie van werken in Flevoland (SWiF)?", type: 'multiple', A: "Tot rust komen", B: "Economisch wonen en werken", C: "Duurzaam groeien", D: "Pionieren voor beter leven", Correct: "D" }
+        var question3 = { question: "Wat zou een onderscheidend en aantrekkelijk aanbod zijn voor iemand om te werken voor de provincie Flevoland?", type: 'multiple', A: "Carri&egrave;re maken", B: "Zinvol werk met veel variatie", C: "Snel geld verdienen", D: "Internationale werkomgeving", Correct: "B" }
+        var question4 = { question: "Formuleer in één korte en krachtige zin wat je toekomstige werknemers kan beloven als ze komen werken voor de provincie Flevoland?", type: 'open'}
         questions.push(question1);
         questions.push(question2);
         questions.push(question3);
+        //questions.push(question4);
 
         return questions;
     }
