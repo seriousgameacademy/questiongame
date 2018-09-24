@@ -213,6 +213,14 @@
         background-color: #808080;
     }
     /* Dark Grey */
+
+    .fullscreen-image {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
 </style>
 
 
@@ -440,6 +448,37 @@
             totalamountplayers = 0;
         }
     })
+
+    var elem = document.documentElement;
+    function openFullscreen() {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) { /* Firefox */
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE/Edge */
+            elem.msRequestFullscreen();
+        }
+
+        $('#fullscreen-container-open').hide();
+        $('#fullscreen-container-close').show();
+    }
+
+    function closeFullscreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+
+        $('#fullscreen-container-open').show();
+        $('#fullscreen-container-close').hide();
+    }
 </script>
 
 <body>
@@ -611,6 +650,24 @@
     </div>
 
     <div id="admin-container" class="container">
+        <div id="fullscreen-container-open" class="fullscreen-image">
+            <a href="javascript:void(0);" onclick="openFullscreen();">
+                <svg style="width: 40px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" version="1.1">
+                    <g id="surface1">
+                        <path style=" " d="M 4 4 L 4 13 L 6 13 L 6 7.4375 L 11.28125 12.71875 L 12.71875 11.28125 L 7.4375 6 L 13 6 L 13 4 Z M 19 4 L 19 6 L 24.5625 6 L 19.28125 11.28125 L 20.71875 12.71875 L 26 7.4375 L 26 13 L 28 13 L 28 4 Z M 4 19 L 4 28 L 13 28 L 13 26 L 7.4375 26 L 12.71875 20.71875 L 11.28125 19.28125 L 6 24.5625 L 6 19 Z M 26 19 L 26 24.5625 L 20.71875 19.28125 L 19.28125 20.71875 L 24.5625 26 L 19 26 L 19 28 L 28 28 L 28 19 Z "></path>
+                    </g>
+                </svg>
+            </a>
+        </div>
+        <div id="fullscreen-container-close" class="fullscreen-image" style="display: none;">
+            <a href="javascript:void(0);" onclick="closeFullscreen();">
+                <svg style="width: 40px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" version="1.1">
+                    <g id="surface1">
+                        <path style=" " d="M 28.28125 2.28125 L 19 11.59375 L 19 3 L 17 3 L 17 15 L 29 15 L 29 13 L 20.40625 13 L 29.71875 3.71875 Z M 3 17 L 3 19 L 11.59375 19 L 2.28125 28.28125 L 3.71875 29.71875 L 13 20.40625 L 13 29 L 15 29 L 15 17 Z "></path>
+                    </g>
+                </svg>
+            </a>
+        </div>
         <div id="admin-header-container" class="row justify-content-center align-self-center" style="margin-top:30px; display:none;">
             <div class="col-sm-4">
 
