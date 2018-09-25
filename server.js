@@ -108,7 +108,7 @@ io.on('connection', function (socket) {
         var index = questions.length - 1;
         
         if (index == questionselected) {
-            updateGameStateAll('gameover');
+            updateGameStateAll('gameover', null);
             return;
         }
 
@@ -124,7 +124,7 @@ io.on('connection', function (socket) {
         console.log("newquestion " + data);
         io.sockets.emit('newquestion', data);
 
-        updateGameStateAll('question');
+        updateGameStateAll('question', questions[questionselected].type);
         setAdminStatusMessage('Weet jij het goede antwoord?...');
     })
 
@@ -136,8 +136,8 @@ io.on('connection', function (socket) {
         answers.push(data);
         console.log(answers);
     })
-    function updateGameStateAll(state) {
-        var data = { state: state, username: socket.username };
+    function updateGameStateAll(state, type) {
+        var data = { state: state, username: socket.username, type: type };
         io.sockets.emit('setGameState', data);
         gamestate = state;
     }
@@ -181,32 +181,32 @@ io.on('connection', function (socket) {
         var data = { question: questions[questionselected], questionselected: questionselected, answerA: percentageAnswers_A, answerB: percentageAnswers_B, answerC: percentageAnswers_C, answerD: percentageAnswers_D }
         console.log(data);
         io.sockets.emit('setAnswerResult', data);
-        updateGameStateAll('answer');
+        updateGameStateAll('answer', null);
         setAdminStatusMessage('Antwoord ' + questions[questionselected].Correct + ' is het JUISTE antwoord...');
     }
 
     function CheckGameState() {
         if (gamestate == 'start') {
-            updateGameStateSocket('start');
+            updateGameStateSocket('start', null);
         }
         if (gamestate == 'question') {
             var questions = getQuestions();
             var data = { question: questions[questionselected], questionselected: questionselected }
             console.log(data);
             socket.emit('newquestion', data);
-            updateGameStateSocket('question');
+            updateGameStateSocket('question', questions[questionselected].type);
         }
         if (gamestate == 'answer') {
             getQuestionResult();
-            updateGameStateSocket('answer');
+            updateGameStateSocket('answer', null);
         }
         if (gamestate == 'gameover') {
-            updateGameStateSocket('gameover');
+            updateGameStateSocket('gameover', null);
         }
     }
 
-    function updateGameStateSocket(gamestate) {
-        var data = { state: gamestate, username: socket.username };
+    function updateGameStateSocket(gamestate, gametype) {
+        var data = { state: gamestate, username: socket.username, type: gametype };
         socket.emit('setGameState', data);
     }
 
@@ -220,11 +220,11 @@ io.on('connection', function (socket) {
         var question1 = { question: "Wat zouden waarden voor Flevoland (SWiF) kunnen zijn?", type: 'multiple', A: "Creatief - Inspiratie - Ontdekken - Samenzijn", B: "Doelgericht - Effici&euml;nt - Kennis - Meesterschap", C: "Dienstbaar - Duurzaam - Pionieren - Veelzijdig", D: "Eenvoudigheid - Enthousiasme - Leraarschap - Waardering", Correct: "C" }
         var question2 = { question: "Wat zou een goede formulering zijn van de essentie van werken in Flevoland (SWiF)?", type: 'multiple', A: "Tot rust komen", B: "Economisch wonen en werken", C: "Duurzaam groeien", D: "Pionieren voor beter leven", Correct: "D" }
         var question3 = { question: "Wat zou een onderscheidend en aantrekkelijk aanbod zijn voor iemand om te werken voor de provincie Flevoland?", type: 'multiple', A: "Carri&egrave;re maken", B: "Zinvol werk met veel variatie", C: "Snel geld verdienen", D: "Internationale werkomgeving", Correct: "B" }
-        var question4 = { question: "Formuleer in één korte en krachtige zin wat je toekomstige werknemers kan beloven als ze komen werken voor de provincie Flevoland?", type: 'open'}
+        var question4 = { question: "Formuleer in 1 korte en krachtige zin wat je toekomstige werknemers kan beloven als ze komen werken voor de provincie Flevoland?", type: 'open'}
         questions.push(question1);
         questions.push(question2);
         questions.push(question3);
-        //questions.push(question4);
+        questions.push(question4);
 
         return questions;
     }

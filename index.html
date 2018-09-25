@@ -253,16 +253,18 @@
         socket.emit('getQuestionResult');
     }
 
-    function setGameState(state) {
+    function setGameState(data) {
         // Hide all
-        $('#admin-question-container').hide();
+        $('#admin-question-container-multi').hide();
+        $('#admin-question-container-open').hide();
         $('#admin-result-question-container').hide();
         $("#admin-container").hide();
         $('.admin-start-container').hide();
         $('#admin-header-container').hide();
         $('#login-container').hide();
         $('#player-welcome-container').hide();
-        $('#player-question-container').hide();
+        $('#player-question-container-multi').hide();
+        $('#player-question-container-open').hide();
         $('#player-question-nok-container').hide();
         $('#player-question-ok-container').hide();
         $('#player-gameover-container').hide();
@@ -274,36 +276,47 @@
             return;
         }
 
-        if (state == 'start' && mode == 'player') {
+        if (data.state == 'start' && mode == 'player') {
             $("#player-welcome-container").show();
         }
-        if (state == 'question' && mode == 'player') {
-            $('#player-question-container').show();
+        if (data.state == 'question' && mode == 'player') {
+            if (data.type == 'multiple') {
+                $('#player-question-container-multi').show();
+            }
+            if (data.type == 'open') {
+                $('#player-question-container-open').show();
+            }
         }
 
-        if (state == 'answer' && mode == 'player') {
+        if (data.state == 'answer' && mode == 'player') {
             $('#player-watch-the-screen-container').show();
         }
-        if (state == 'gameover' && mode == 'player') {
+        if (data.state == 'gameover' && mode == 'player') {
             $('#player-gameover-container').show();
         }
-        if (state == 'start' && mode == 'admin') {
+        if (data.state == 'start' && mode == 'admin') {
             $("#admin-container").show();
             $('.admin-start-container').show();
             $('#admin-header-container').show();
         }
         
-        if (state == 'question' && mode == 'admin') {
+        if (data.state == 'question' && mode == 'admin') {
             $("#admin-container").show();
-            $('#admin-question-container').show();
             $('#admin-header-container').show();
+
+            if (data.type == 'multiple') {
+                $('#admin-question-container-multi').show();
+            }
+            if (data.type == 'open') {
+                $('#admin-question-container-open').show();
+            }
         }
-        if (state == 'answer' && mode == 'admin') {
+        if (data.state == 'answer' && mode == 'admin') {
             $("#admin-container").show();
             $('#admin-result-question-container').show();
             $('#admin-header-container').hide();
         }
-        if (state == 'gameover' && mode == 'admin') {
+        if (data.state == 'gameover' && mode == 'admin') {
             $("#admin-container").show();
             $('#admin-header-container').show();
             $('#admin-status-message').html("<h1>GAME OVER</h1>");
@@ -319,7 +332,8 @@
     }
 
     function setAnswer(answer) {
-        $('#player-question-container').hide();
+        $('#player-question-container-multi').hide();
+        $('#player-question-container-open').hide();
         $('#player-question-ok-container').hide();
         $('#player-question-nok-container').hide();
 
@@ -333,17 +347,30 @@
         socket.emit('setSocketQuestionAnswer', { answer: answer, questionselected: questionselected, username: socket.username });
     }
 
+    function setOpenAnswer() {
+        getQuestion();
+    }
+
     socket.on('newquestion', function (data) {
         console.log(data);
         
         if (mode == 'admin') {
             $('.question-question').html(data.question.question);
-            $('.answer-a').html(data.question.A);
-            $('.answer-b').html(data.question.B);
-            $('.answer-c').html(data.question.C);
-            $('.answer-d').html(data.question.D);
-            $('.question-number').html((data.questionselected + 1));
+            
+            if (data.question.type == 'multiple') {
+                $('.answer-a').html(data.question.A);
+                $('.answer-b').html(data.question.B);
+                $('.answer-c').html(data.question.C);
+                $('.answer-d').html(data.question.D);
+            }
+
+            if (data.question.type == 'open') {
+
+            }
         }
+
+        $('.question-number').html((data.questionselected + 1));
+
         questionselected = data.questionselected;
         currentQuestionAnswer = data.question.Correct;
     })
@@ -389,7 +416,7 @@
     })
 
     socket.on('setGameState', function (data) {
-        setGameState(data.state)
+        setGameState(data)
     })
     
     socket.on('setAdminStatusMessage', function (data) {
@@ -552,10 +579,13 @@
         </div>
 
     </div>
-    <div id="player-question-container" style="display: none;" class="container">
+    <div id="player-question-container-multi" style="display: none;" class="container">
         <div class="row row-centered" style="margin-top:30px;">
             <div class="col-sm-12 text-center">
                 <svg style="margin-bottom:25px; width: 150px;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 252 252"><g transform="translate(13.734,13.734) scale(0.891,0.891)"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="none" stroke-linecap="butt" stroke-linejoin="none" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g id="Layer_1 1" stroke="#ffffff" stroke-width="31" stroke-linejoin="round"><g id="surface1_33_ 1"><path d="M231,126c0,57.981 -47.019,105 -105,105c-57.981,0 -105,-47.019 -105,-105c0,-57.981 47.019,-105 105,-105c57.981,0 105,47.019 105,105z" fill="#2196f3"></path><path d="M134.19,167.244c2.46225,2.48325 3.69075,5.64375 3.69075,9.47625c0,3.7695 -1.21275,6.888 -3.612,9.35025c-2.42025,2.46225 -5.58075,3.69075 -9.51825,3.69075c-3.95325,0 -7.11375,-1.2285 -9.534,-3.69075c-2.4045,-2.457 -3.612,-5.5755 -3.612,-9.35025c0,-3.83775 1.2285,-6.993 3.69075,-9.47625c2.46225,-2.50425 5.6175,-3.73275 9.43425,-3.73275c3.7905,0 7.014,1.2705 9.4605,3.73275z" fill="#e3f2fd"></path><path d="M162.7815,100.0965c0,4.59375 -1.04475,8.94075 -3.1185,13.041c-2.05275,4.07925 -5.68575,8.61525 -10.83075,13.5975l-6.6255,6.25275c-4.14225,3.9585 -6.50475,8.57325 -7.098,13.88625l-0.33075,5.37075h-20.895c0,-7.58625 0.924,-14.049 2.78775,-18.53775c1.848,-4.48875 5.229,-8.91975 10.1535,-13.26675c4.91925,-4.368 8.2005,-7.91175 9.82275,-10.64175c1.64325,-2.72475 2.44125,-5.6175 2.44125,-8.652c0,-9.1665 -4.22625,-13.73925 -12.7155,-13.73925c-4.0215,0 -7.26075,1.2285 -9.66,3.71175c-2.42025,2.457 -3.69075,5.86425 -3.79575,10.19025l-0.042,3.69075h-23.625v-5.25h0.084c0.4095,-9.576 3.73275,-17.18325 9.9855,-22.722c6.59925,-5.84325 15.624,-8.778 27.048,-8.778c11.529,0 20.46975,2.76675 26.8485,8.3265c6.35775,5.55975 9.534,13.39275 9.5655,23.52z" fill="#e3f2fd"></path></g></g><path d="M0,252v-252h252v252z" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><g id="Layer_1" stroke="none" stroke-width="1" stroke-linejoin="miter"><g id="surface1_33_"><path d="M231,126c0,57.981 -47.019,105 -105,105c-57.981,0 -105,-47.019 -105,-105c0,-57.981 47.019,-105 105,-105c57.981,0 105,47.019 105,105z" fill="#2196f3"></path><path d="M124.7295,163.51125c-3.81675,0 -6.972,1.2285 -9.43425,3.73275c-2.46225,2.48325 -3.69075,5.6385 -3.69075,9.47625c0,3.77475 1.2075,6.89325 3.612,9.35025c2.42025,2.46225 5.58075,3.69075 9.534,3.69075c3.9375,0 7.098,-1.2285 9.51825,-3.69075c2.39925,-2.46225 3.612,-5.58075 3.612,-9.35025c0,-3.8325 -1.2285,-6.993 -3.69075,-9.47625c-2.4465,-2.46225 -5.67,-3.73275 -9.4605,-3.73275z" fill="#e3f2fd"></path><path d="M153.216,76.5765c-6.37875,-5.55975 -15.3195,-8.3265 -26.8485,-8.3265c-11.424,0 -20.44875,2.93475 -27.048,8.778c-6.25275,5.53875 -9.576,13.146 -9.9855,22.722h-0.084v5.25h23.625l0.042,-3.69075c0.105,-4.326 1.3755,-7.73325 3.79575,-10.19025c2.39925,-2.48325 5.6385,-3.71175 9.66,-3.71175c8.48925,0 12.7155,4.57275 12.7155,13.73925c0,3.0345 -0.798,5.92725 -2.44125,8.652c-1.62225,2.73 -4.9035,6.27375 -9.82275,10.64175c-4.9245,4.347 -8.3055,8.778 -10.1535,13.26675c-1.86375,4.48875 -2.78775,10.9515 -2.78775,18.53775h20.895l0.33075,-5.37075c0.59325,-5.313 2.95575,-9.92775 7.098,-13.88625l6.6255,-6.25275c5.145,-4.98225 8.778,-9.51825 10.83075,-13.5975c2.07375,-4.10025 3.1185,-8.44725 3.1185,-13.041c-0.0315,-10.12725 -3.20775,-17.96025 -9.5655,-23.52z" fill="#e3f2fd"></path></g></g><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path></g></g></svg>
+            </div>
+            <div class="col-sm-12 text-center">
+                <h2>Vraag <span class="question-number"></span></h2>
             </div>
             <div class="col-sm-12 text-center">
                 <h2>Welk antwoord is goed?</h2>
@@ -576,6 +606,30 @@
             </div>
         </div>
 
+    </div>
+    <div id="player-question-container-open" style="display: none;" class="container">
+        <div class="row row-centered" style="margin-top:30px;">
+            <div class="col-sm-12 text-center">
+                <svg style="margin-bottom:25px; width: 150px;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 252 252"><g transform="translate(13.734,13.734) scale(0.891,0.891)"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="none" stroke-linecap="butt" stroke-linejoin="none" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g id="Layer_1 1" stroke="#ffffff" stroke-width="31" stroke-linejoin="round"><g id="surface1_33_ 1"><path d="M231,126c0,57.981 -47.019,105 -105,105c-57.981,0 -105,-47.019 -105,-105c0,-57.981 47.019,-105 105,-105c57.981,0 105,47.019 105,105z" fill="#2196f3"></path><path d="M134.19,167.244c2.46225,2.48325 3.69075,5.64375 3.69075,9.47625c0,3.7695 -1.21275,6.888 -3.612,9.35025c-2.42025,2.46225 -5.58075,3.69075 -9.51825,3.69075c-3.95325,0 -7.11375,-1.2285 -9.534,-3.69075c-2.4045,-2.457 -3.612,-5.5755 -3.612,-9.35025c0,-3.83775 1.2285,-6.993 3.69075,-9.47625c2.46225,-2.50425 5.6175,-3.73275 9.43425,-3.73275c3.7905,0 7.014,1.2705 9.4605,3.73275z" fill="#e3f2fd"></path><path d="M162.7815,100.0965c0,4.59375 -1.04475,8.94075 -3.1185,13.041c-2.05275,4.07925 -5.68575,8.61525 -10.83075,13.5975l-6.6255,6.25275c-4.14225,3.9585 -6.50475,8.57325 -7.098,13.88625l-0.33075,5.37075h-20.895c0,-7.58625 0.924,-14.049 2.78775,-18.53775c1.848,-4.48875 5.229,-8.91975 10.1535,-13.26675c4.91925,-4.368 8.2005,-7.91175 9.82275,-10.64175c1.64325,-2.72475 2.44125,-5.6175 2.44125,-8.652c0,-9.1665 -4.22625,-13.73925 -12.7155,-13.73925c-4.0215,0 -7.26075,1.2285 -9.66,3.71175c-2.42025,2.457 -3.69075,5.86425 -3.79575,10.19025l-0.042,3.69075h-23.625v-5.25h0.084c0.4095,-9.576 3.73275,-17.18325 9.9855,-22.722c6.59925,-5.84325 15.624,-8.778 27.048,-8.778c11.529,0 20.46975,2.76675 26.8485,8.3265c6.35775,5.55975 9.534,13.39275 9.5655,23.52z" fill="#e3f2fd"></path></g></g><path d="M0,252v-252h252v252z" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><g id="Layer_1" stroke="none" stroke-width="1" stroke-linejoin="miter"><g id="surface1_33_"><path d="M231,126c0,57.981 -47.019,105 -105,105c-57.981,0 -105,-47.019 -105,-105c0,-57.981 47.019,-105 105,-105c57.981,0 105,47.019 105,105z" fill="#2196f3"></path><path d="M124.7295,163.51125c-3.81675,0 -6.972,1.2285 -9.43425,3.73275c-2.46225,2.48325 -3.69075,5.6385 -3.69075,9.47625c0,3.77475 1.2075,6.89325 3.612,9.35025c2.42025,2.46225 5.58075,3.69075 9.534,3.69075c3.9375,0 7.098,-1.2285 9.51825,-3.69075c2.39925,-2.46225 3.612,-5.58075 3.612,-9.35025c0,-3.8325 -1.2285,-6.993 -3.69075,-9.47625c-2.4465,-2.46225 -5.67,-3.73275 -9.4605,-3.73275z" fill="#e3f2fd"></path><path d="M153.216,76.5765c-6.37875,-5.55975 -15.3195,-8.3265 -26.8485,-8.3265c-11.424,0 -20.44875,2.93475 -27.048,8.778c-6.25275,5.53875 -9.576,13.146 -9.9855,22.722h-0.084v5.25h23.625l0.042,-3.69075c0.105,-4.326 1.3755,-7.73325 3.79575,-10.19025c2.39925,-2.48325 5.6385,-3.71175 9.66,-3.71175c8.48925,0 12.7155,4.57275 12.7155,13.73925c0,3.0345 -0.798,5.92725 -2.44125,8.652c-1.62225,2.73 -4.9035,6.27375 -9.82275,10.64175c-4.9245,4.347 -8.3055,8.778 -10.1535,13.26675c-1.86375,4.48875 -2.78775,10.9515 -2.78775,18.53775h20.895l0.33075,-5.37075c0.59325,-5.313 2.95575,-9.92775 7.098,-13.88625l6.6255,-6.25275c5.145,-4.98225 8.778,-9.51825 10.83075,-13.5975c2.07375,-4.10025 3.1185,-8.44725 3.1185,-13.041c-0.0315,-10.12725 -3.20775,-17.96025 -9.5655,-23.52z" fill="#e3f2fd"></path></g></g><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path></g></g></svg>
+            </div>
+            <div class="col-sm-12 text-center">
+                <h2>Vraag <span class="question-number"></span></h2>
+            </div>
+            <div class="col-sm-12 text-center">
+                <h2>(Max. 140 tekens)</h2>
+            </div>
+            <div class="col-sm-12 text-center">
+                <form>
+                    <div class="form-group">
+                        <textarea id="openquestionarea" class="form-control" autofocus="autofocus" name="openquestion" rows="5" maxlength="140" placeholder=""></textarea>
+                    </div>
+                </form>
+                <div id="error-container-answer-open"></div>
+            </div>
+            <div class="col-sm-12 text-center">
+                <button type="button" name="button" class="btn btn-info btn-lg btn-block" onclick="setOpenAnswer()">Verstuur</button>
+            </div>
+        </div>
     </div>
     <div id="player-question-ok-container" style="display: none;" class="overlay-ok">
         <div class="row row-centered" style="margin-top:30px;">
@@ -716,7 +770,7 @@
                 </div>
             </div>
         </div>
-        <div id="admin-question-container" class="row" style="display:none;" align-items-start>
+        <div id="admin-question-container-multi" class="row" style="display:none;" align-items-start>
             <div class="col-sm-12">
                 <h1>Vraag <span class="question-number"></span>: <span class="question-question"></span></h1>
             </div>
@@ -746,6 +800,19 @@
             <div class="col-sm-12">
                 <div class="text-center">
                     <button type="button" name="button" class="btn btn-info btn-lg" onclick="getQuestionResult()">Toon resultaten</button>
+                </div>
+            </div>
+        </div>
+        <div id="admin-question-container-open" class="row" style="display:none;" align-items-start>
+            <div class="col-sm-12">
+                <h1>Vraag <span class="question-number"></span>: <span class="question-question"></span></h1>
+            </div>
+            <div class="col-sm-12">
+                &nbsp;
+            </div>
+            <div class="col-sm-12">
+                <div class="text-center">
+                    <button type="button" name="button" class="btn btn-info btn-lg" onclick="getRanking()">Toon resultaten</button>
                 </div>
             </div>
         </div>
