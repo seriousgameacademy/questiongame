@@ -267,6 +267,7 @@
         $('#player-question-container-open').hide();
         $('#player-question-nok-container').hide();
         $('#player-question-ok-container').hide();
+        $('#player-question-open-ok-container').hide();
         $('#player-gameover-container').hide();
         $('#player-watch-the-screen-container').hide();
         
@@ -336,6 +337,7 @@
         $('#player-question-container-open').hide();
         $('#player-question-ok-container').hide();
         $('#player-question-nok-container').hide();
+        $('#player-question-open-ok-container').hide();
 
         if (currentQuestionAnswer == answer) {
             $('#player-question-ok-container').show();
@@ -348,7 +350,11 @@
     }
 
     function setOpenAnswer() {
-        getQuestion();
+        $('#player-question-container-multi').hide();
+        $('#player-question-container-open').hide();
+        $('#player-question-ok-container').hide();
+        $('#player-question-nok-container').hide();
+        $('#player-question-open-ok-container').show();
     }
 
     socket.on('newquestion', function (data) {
@@ -647,7 +653,7 @@
                 <h2>Het antwoord is JUIST!</h2>
             </div>
             <div class="col-sm-12 text-center" style="margin-top:15px">
-                <img src="https://novanetprdstorage.blob.core.windows.net/questiongame/jongetjeblij150150.png" width="150px" class="" />
+                <img src="https://novanetprdstorage.blob.core.windows.net/questiongame/jongetjeblij150150.png" style="width: 150px;" class="" />
             </div>
         </div>
     </div>
@@ -665,6 +671,19 @@
             </div>
             <div class="col-sm-12 text-center">
                 <h2>Watch the big screen for the results!</h2>
+            </div>
+        </div>
+    </div>
+    <div id="player-question-open-ok-container" style="display: none;" class="">
+        <div class="row row-centered" style="margin-top:30px;">
+            <div class="col-sm-12 text-center">
+                <svg style="width: 150px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 252 252"><g transform="translate(7.938,7.938) scale(0.937,0.937)"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="none" stroke-linecap="butt" stroke-linejoin="none" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g stroke="#ffffff" stroke-width="17" stroke-linejoin="round"><g id="surface1 1"><path d="M220.5,57.75v136.5c0,14.49902 -11.75098,26.25 -26.25,26.25h-136.5c-14.49902,0 -26.25,-11.75098 -26.25,-26.25v-136.5c0,-14.49902 11.75098,-26.25 26.25,-26.25h136.5c14.49902,0 26.25,11.75098 26.25,26.25z" fill="#3498db"></path><path d="M57.75,57.75h136.5v136.5h-136.5z" fill="#f1f8e9"></path><path d="M70.11621,123.04688l14.84766,-14.84766l44.54297,44.56348l-14.84766,14.84766z" fill="#2980b9"></path><path d="M99.38086,152.33203l66.83496,-66.83496l15.66797,15.66797l-66.81445,66.83496z" fill="#2980b9"></path></g></g><path d="M0,252v-252h252v252z" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><g stroke="none" stroke-width="1" stroke-linejoin="miter"><g id="surface1"><path d="M194.25,31.5h-136.5c-14.49902,0 -26.25,11.75098 -26.25,26.25v136.5c0,14.49902 11.75098,26.25 26.25,26.25h136.5c14.49902,0 26.25,-11.75098 26.25,-26.25v-136.5c0,-14.49902 -11.75098,-26.25 -26.25,-26.25z" fill="#3498db"></path><path d="M57.75,57.75h136.5v136.5h-136.5z" fill="#f1f8e9"></path><path d="M70.11621,123.04688l14.84766,-14.84766l44.54297,44.56348l-14.84766,14.84766z" fill="#2980b9"></path><path d="M99.38086,152.33203l66.83496,-66.83496l15.66797,15.66797l-66.81445,66.83496z" fill="#2980b9"></path></g></g><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path></g></g></svg>
+            </div>
+            <div class="col-sm-12 text-center">
+                <h2>Dit zou zomaar het beste antwoord kunnen zijn. <br />Zal jij de meeste stemmen krijgen?...</h2>
+            </div>
+            <div class="col-sm-12 text-center" style="margin-top:15px">
+                <img src="https://novanetprdstorage.blob.core.windows.net/questiongame/jongetjeblij150150.png" style="width: 150px;" class="" />
             </div>
         </div>
     </div>
@@ -812,7 +831,7 @@
             </div>
             <div class="col-sm-12">
                 <div class="text-center">
-                    <button type="button" name="button" class="btn btn-info btn-lg" onclick="getRanking()">Toon resultaten</button>
+                    <button type="button" name="button" class="btn btn-info btn-lg" onclick="getQuestion()">Toon resultaten</button>
                 </div>
             </div>
         </div>
