@@ -28,6 +28,7 @@ server.listen(port, () => {
 var io = require('socket.io')(server);
 var users = [];
 var answers = [];
+var scores = [];
 
 io.on('connection', function (socket) {
     console.log('A user connected');
@@ -51,6 +52,9 @@ io.on('connection', function (socket) {
                 var data_admin = { players: totalamountplayers };
                 console.log(data_admin);
                 io.sockets.emit('totalamountplayers', data_admin);
+
+                // reset scores
+                scores = [];
             }
             else {
                 socket.emit('setScreenType', { type: 'player' })
@@ -121,11 +125,67 @@ io.on('connection', function (socket) {
         }
         
         var data = { question: questions[questionselected], questionselected: questionselected }
-        console.log("newquestion " + data);
+        console.log(data);
         io.sockets.emit('newquestion', data);
 
         updateGameStateAll('question', questions[questionselected].type);
         setAdminStatusMessage('Weet jij het goede antwoord?...');
+    })
+
+    socket.on('getGameRanking', function () {
+        var playerscores = [];
+
+        // Sort the object scores by name
+        scores.sort(function (a, b) {
+            var a1 = a.name, b1 = b.name;
+            if (a1 == b1) return 0;
+            return a1 > b1 ? 1 : -1;
+        });
+
+        console.log('Ordered scores: ')
+
+        var names = [];
+
+        var name = "";
+        for (var i = 0; i < scores.length; i++) {
+            if (i == 0) {
+                name = scores[i].name
+                names.push(name);
+                console.log(name);
+            }
+            else {
+                if (name != scores[i].name) {
+                    name = scores[i].name
+                    names.push(name);
+                    console.log(name);
+                }
+            }
+            console.log(scores[i]);
+        }   
+
+        console.log(names);
+
+        for (var i = 0; i < names.length; i++) {
+            var totalscore = 0;
+            for (var k = 0; k < scores.length; k++) {
+                if (scores[k].name == names[i]) {
+                    totalscore = totalscore + scores[k].points;
+                }
+            }
+
+            var playerscore = { name: names[i], score: totalscore };
+            playerscores.push(playerscore)
+            console.log(playerscore);
+        }
+
+        var data = { playerscores: playerscores }
+        console.log(data);
+        io.sockets.emit('setGameRanking', data);
+    })
+
+    socket.on('registerScore', function (data) {
+        scores.push(data);
+        console.log(scores);
     })
 
     socket.on('getQuestionResult', function (data) {
@@ -141,7 +201,7 @@ io.on('connection', function (socket) {
         io.sockets.emit('setGameState', data);
         gamestate = state;
     }
-
+    
     function getQuestionResult() {
         var questions = getQuestions();
         var totalAnwers_A = 0;
