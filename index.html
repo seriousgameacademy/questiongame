@@ -275,6 +275,7 @@
         // Show
         if (mode == null) {
             $('#login-container').show();
+            $('.input-username').focus();
             return;
         }
 
@@ -311,6 +312,7 @@
             }
             if (data.type == 'open') {
                 $('#admin-question-container-open').show();
+                $('#openquestionarea').focus();
             }
         }
         if (data.state == 'answer' && mode == 'admin') {
@@ -345,6 +347,7 @@
             $('#player-question-ok-container').show();
         }
         else {
+            socket.emit('registerScore', { name: socket.username, points: 0 })
             $('#player-question-nok-container').show();
         }
         
@@ -602,7 +605,7 @@
                 <div class="text-center">
                     <form>
                         <div class="form-group">
-                            <input id="name" class="form-control" type="text" name="name" value="" maxlength="30" aria-describedby="emailHelp" placeholder="Vul in je naam!">
+                            <input id="name" class="form-control input-username" type="text" name="name" value="" maxlength="30" aria-describedby="emailHelp" placeholder="Vul in je naam!">
 
                             <small id="emailHelp" class="form-text">We'll never share your name with anyone else...;-) watch the big screen!</small>
                         </div>
