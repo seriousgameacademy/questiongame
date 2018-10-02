@@ -231,9 +231,10 @@
     var mode = null;
     var currentQuestionAnswer;
     var totalamountplayers = 0;
-
+    
     function setUsername() {
         socket.username = document.getElementById('name').value
+        $('#start-btn').attr('disabled', 'disabled');
         socket.emit('setUsername', document.getElementById('name').value);
         $("#error-container").hide();
     };
@@ -273,6 +274,7 @@
         $('#admin-ranking-container').hide();
         
         // Show
+
         if (mode == null) {
             $('#login-container').show();
             $('.input-username').focus();
@@ -280,9 +282,17 @@
         }
 
         if (data.state == 'start' && mode == 'player') {
+            localStorage.removeItem("answered");
             $("#player-welcome-container").show();
         }
         if (data.state == 'question' && mode == 'player') {
+
+            let answered = localStorage.getItem('answered');
+
+            if (answered === 'ok' || answered === 'nok' || answered === 'open') {
+                $('#player-watch-the-screen-container').show();
+                return;
+            }
             if (data.type == 'multiple') {
                 $('#player-question-container-multi').show();
             }
@@ -345,10 +355,12 @@
         if (currentQuestionAnswer == answer) {
             socket.emit('registerScore', { name: socket.username, points: 150 })
             $('#player-question-ok-container').show();
+            localStorage.setItem('answered', 'ok');
         }
         else {
             socket.emit('registerScore', { name: socket.username, points: 0 })
             $('#player-question-nok-container').show();
+            localStorage.setItem('answered', 'nok');
         }
         
         socket.emit('setSocketQuestionAnswer', { answer: answer, questionselected: questionselected, username: socket.username });
@@ -360,6 +372,7 @@
         $('#player-question-ok-container').hide();
         $('#player-question-nok-container').hide();
         $('#player-question-open-ok-container').show();
+        localStorage.setItem('answered', 'open');
     }
 
     function setGameRanking(playerscores) {
@@ -430,7 +443,6 @@
 
     socket.on('newquestion', function (data) {
         console.log(data);
-        
         if (mode == 'admin') {
             $('.question-question').html(data.question.question);
             
@@ -454,7 +466,7 @@
 
     socket.on('setAnswerResult', function (data) {
         console.log(data);
-
+        localStorage.removeItem("answered");
         if (mode == 'admin') {
             $('.question-question').html(data.question.question);
             $('.answer-a').html(data.question.A);
@@ -509,16 +521,23 @@
 
     socket.on('setScreenType', function (data) {
         mode = data.type;
-        
+        localStorage.setItem('mode', mode);
     })
 
     socket.on('userExists', function (data) {
+        setTimeout(function () {
+            $('#start-btn').removeAttr('disabled');
+        }, 2000);
+        
         $("#error-container").show();
         $("#error-container").html(data);
     })
 
     socket.on('userSet', function (data) {
+        localStorage.setItem('username', data.username);
+        $('#start-btn').removeAttr('disabled');
         $("#login-container").hide();
+
         $(".start-message").show();
         $(".spinner").show();
     })
@@ -605,7 +624,7 @@
                 <div class="text-center">
                     <form>
                         <div class="form-group">
-                            <input id="name" class="form-control input-username" type="text" name="name" value="" maxlength="30" aria-describedby="emailHelp" placeholder="Vul in je naam!">
+                            <input id="name" class="form-control input-username" type="text" name="name" value="" maxlength="20" aria-describedby="emailHelp" placeholder="Vul in je naam!">
 
                             <small id="emailHelp" class="form-text">We'll never share your name with anyone else...;-) watch the big screen!</small>
                         </div>
@@ -614,7 +633,7 @@
                     <div id="error-container"></div>
                 </div>
                 <div class="text-center">
-                    <button type="button" name="button" class="btn btn-info btn-lg btn-block" onclick="setUsername()">Start</button>
+                    <button type="button" id="start-btn" name="button" class="btn btn-info btn-lg btn-block" onclick="setUsername()">Start</button>
                 </div>
             </div>
             <div class="col-sm-4">
@@ -962,7 +981,7 @@
             <div class="col-sm-8">
                 <div class="row" style="margin-top:80px">
                     <div class="col-sm-12 text-center">
-                        <h1>Ranking</h1>
+                        <h1>Top 10 Ranking</h1>
                     </div>
                     <div class="col-sm-12">
                         <div class="row" id="player_01_container">

@@ -25,24 +25,26 @@ server.listen(port, () => {
     console.log('Server listening at port %d', port);
 });
 
-var io = require('socket.io')(server);
-var users = [];
-var answers = [];
-var scores = [];
+let io = require('socket.io')(server);
+let users = [];
+let answers = [];
+let scores = [];
 
 io.on('connection', function (socket) {
     console.log('A user connected');
     CheckGameState();
 
     socket.on('setUsername', function (username) {
-        if (users.indexOf(username) > -1) {
+        const user = users.find((user) => user === username.toLowerCase());
+
+        if (user != null) {
             socket.emit('userExists', 'Speler ' + username + ' bestaat al! Probeer een andere naam.');
             console.log(users);
         } else {
             socket.username = username;
-            users.push(socket.username);
+            users.push(socket.username.toLowerCase());
             
-            if (socket.username == 'admin') {
+            if (socket.username.toLowerCase() === 'admin') {
                 questionselected = -1;
                 gamestate = "start";
                 socket.emit('setScreenType', { type: 'admin' })
@@ -136,7 +138,10 @@ io.on('connection', function (socket) {
         var playerscores = [];
 
         // Sort the object scores by name
-        scores.sort(function (a, b) {
+
+        var scoresCalculated = scores;
+
+        scoresCalculated.sort(function (a, b) {
             var a1 = a.name, b1 = b.name;
             if (a1 == b1) return 0;
             return a1 > b1 ? 1 : -1;
@@ -147,29 +152,30 @@ io.on('connection', function (socket) {
         var names = [];
 
         var name = "";
-        for (var i = 0; i < scores.length; i++) {
+        for (var i = 0; i < scoresCalculated.length; i++) {
             if (i == 0) {
-                name = scores[i].name
+                name = scoresCalculated[i].name
                 names.push(name);
                 console.log(name);
             }
             else {
-                if (name != scores[i].name) {
-                    name = scores[i].name
-                    names.push(name);
-                    console.log(name);
+                if (name.toLowerCase() == scoresCalculated[i].name.toLowerCase()) {
+                    continue;
                 }
+                name = scoresCalculated[i].name
+                names.push(name);
+                console.log(name);
             }
-            console.log(scores[i]);
+            console.log(scoresCalculated[i]);
         }   
 
         console.log(names);
 
         for (var i = 0; i < names.length; i++) {
             var totalscore = 0;
-            for (var k = 0; k < scores.length; k++) {
-                if (scores[k].name == names[i]) {
-                    totalscore = totalscore + scores[k].points;
+            for (var k = 0; k < scoresCalculated.length; k++) {
+                if (scoresCalculated[k].name == names[i]) {
+                    totalscore = totalscore + scoresCalculated[k].points;
                 }
             }
 
@@ -177,6 +183,12 @@ io.on('connection', function (socket) {
             playerscores.push(playerscore)
             console.log(playerscore);
         }
+
+        playerscores.sort(function (a, b) {
+            var a1 = a.score, b1 = b.score;
+            if (a1 == b1) return 0;
+            return a1 < b1 ? 1 : -1;
+        });
 
         var data = { playerscores: playerscores }
         console.log(data);
