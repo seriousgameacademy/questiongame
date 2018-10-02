@@ -272,6 +272,7 @@
         $('#player-gameover-container').hide();
         $('#player-watch-the-screen-container').hide();
         $('#admin-ranking-container').hide();
+        $('#timer-container').hide();
         
         // Show
 
@@ -319,6 +320,7 @@
 
             if (data.type == 'multiple') {
                 $('#admin-question-container-multi').show();
+                $('#timer-container').show();
             }
             if (data.type == 'open') {
                 $('#admin-question-container-open').show();
@@ -445,6 +447,20 @@
         console.log(data);
         if (mode == 'admin') {
             $('.question-question').html(data.question.question);
+
+            var timer = 25;
+            $('#timer-seconds').html(timer);
+            var myVar = setInterval(function () {
+
+                timer = timer - 1;
+                // Get todays date and time
+                $('#timer-seconds').html(timer);
+
+                if (timer == 0) {
+                    getQuestionResult();
+                    clearInterval(myVar);
+                }
+            }, 1000);
             
             if (data.question.type == 'multiple') {
                 $('.answer-a').html(data.question.A);
@@ -865,6 +881,29 @@
                         </div>
                     </div>
                 </div>
+                <div id="timer-container" class="row text-center">
+                    <div class="col-sm-6" style="text-align:right;">
+                        <svg style="width: 150px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48" version="1.1">
+                            <g id="surface1">
+                                <path style=" fill:#37474F;" d="M 38.5 44.601563 L 34.5 40.601563 L 36.601563 38.5 L 40.601563 42.5 C 41.199219 43.101563 41.199219 44 40.601563 44.601563 C 40.101563 45.101563 39.101563 45.101563 38.5 44.601563 Z "></path>
+                                <path style=" fill:#37474F;" d="M 9.5 44.601563 L 13.5 40.601563 L 11.398438 38.5 L 7.398438 42.5 C 6.800781 43.101563 6.800781 44 7.398438 44.601563 C 7.898438 45.101563 8.898438 45.101563 9.5 44.601563 Z "></path>
+                                <path style=" fill:#C62828;" d="M 44 24 C 44 35.046875 35.046875 44 24 44 C 12.953125 44 4 35.046875 4 24 C 4 12.953125 12.953125 4 24 4 C 35.046875 4 44 12.953125 44 24 Z "></path>
+                                <path style=" fill:#EEEEEE;" d="M 40 24 C 40 32.835938 32.835938 40 24 40 C 15.164063 40 8 32.835938 8 24 C 8 15.164063 15.164063 8 24 8 C 32.835938 8 40 15.164063 40 24 Z "></path>
+                                <path style=" fill:#E53935;" d="M 15.097656 33.476563 L 14.53125 32.910156 L 23.722656 23.71875 L 24.289063 24.28125 Z "></path>
+                                <path style=" " d="M 23 11 L 25 11 L 25 24 L 23 24 Z "></path>
+                                <path style=" " d="M 31.28125 29.652344 L 29.65625 31.28125 L 23.148438 24.773438 L 24.777344 23.148438 Z "></path>
+                                <path style=" " d="M 26 24 C 26 25.105469 25.105469 26 24 26 C 22.894531 26 22 25.105469 22 24 C 22 22.894531 22.894531 22 24 22 C 25.105469 22 26 22.894531 26 24 Z "></path>
+                                <path style=" fill:#C62828;" d="M 25 24 C 25 24.550781 24.550781 25 24 25 C 23.449219 25 23 24.550781 23 24 C 23 23.449219 23.449219 23 24 23 C 24.550781 23 25 23.449219 25 24 Z "></path>
+                                <path style=" fill:#37474F;" d="M 22 1 L 26 1 L 26 4 L 22 4 Z "></path>
+                                <path style=" fill:#37474F;" d="M 44.398438 16.199219 C 46.898438 12.699219 46.5 7.800781 43.398438 4.699219 C 40.300781 1.601563 35.398438 1.199219 31.898438 3.699219 Z "></path>
+                                <path style=" fill:#37474F;" d="M 3.601563 16.199219 C 1.101563 12.699219 1.5 7.800781 4.601563 4.699219 C 7.699219 1.601563 12.601563 1.199219 16.101563 3.699219 Z "></path>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="col-sm-6" style="text-align:left;">
+                        <span style="font-size: 8em; color: #FFFFFF" id="timer-seconds"></span>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row admin-start-container" align-items-start>
@@ -913,11 +952,7 @@
             <div class="col-sm-12">
                 &nbsp;
             </div>
-            <div class="col-sm-12">
-                <div class="text-center">
-                    <button type="button" name="button" class="btn btn-info btn-lg" onclick="getQuestionResult()">Toon resultaten</button>
-                </div>
-            </div>
+            
         </div>
         <div id="admin-question-container-open" class="row" style="display:none;" align-items-start>
             <div class="col-sm-12">
