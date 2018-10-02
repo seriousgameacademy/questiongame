@@ -35,6 +35,10 @@ io.on('connection', function (socket) {
     CheckGameState();
 
     socket.on('setUsername', function (username) {
+
+        if (username == 'Admin') {
+            username = username.toLowerCase();
+        }
         const user = users.find((user) => user === username.toLowerCase());
 
         if (user != null) {
@@ -44,7 +48,7 @@ io.on('connection', function (socket) {
             socket.username = username;
             users.push(socket.username.toLowerCase());
             
-            if (socket.username.toLowerCase() === 'admin') {
+            if (socket.username === 'admin') {
                 questionselected = -1;
                 gamestate = "start";
                 socket.emit('setScreenType', { type: 'admin' })
