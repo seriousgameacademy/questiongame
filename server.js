@@ -39,6 +39,10 @@ io.on('connection', function (socket) {
         if (username == 'Admin') {
             username = username.toLowerCase();
         }
+
+        if (username == 'admin') {
+            users = [];
+        }
         const user = users.find((user) => user === username.toLowerCase());
 
         if (user != null) {
@@ -46,10 +50,9 @@ io.on('connection', function (socket) {
             console.log(users);
         } else {
             socket.username = username;
-            
+            users.push(socket.username.toLowerCase());
             if (socket.username === 'admin') {
-                users = [];
-                users.push(socket.username.toLowerCase());
+                
                 questionselected = -1;
                 gamestate = "start";
                 socket.emit('setScreenType', { type: 'admin' })
@@ -64,7 +67,6 @@ io.on('connection', function (socket) {
                 scores = [];
             }
             else {
-                users.push(socket.username.toLowerCase());
                 socket.emit('setScreenType', { type: 'player' })
                 socket.emit('welkommsg', { message: 'Welkom!', username: socket.username });
                 console.log(gamestate);
