@@ -224,7 +224,7 @@
     }
 
     *:focus {
-        outline: none !important;
+        outline: 0 !important;
     }
 
 </style>
@@ -242,8 +242,6 @@
     var gamestate;
 
     $("a").click(function (e) {
-        $(this).css("outline", "none");
-        $("a").css("text-decoration", "none");
         $(this).blur();
         e.preventDefault();
     });
