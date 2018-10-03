@@ -242,6 +242,8 @@
     var gamestate;
 
     $("a").click(function (e) {
+        $(this).css("outline", "none");
+        $("a").css("text-decoration", "none");
         $(this).blur();
         e.preventDefault();
     });
@@ -377,6 +379,10 @@
     }
 
     function setAnswer(answer) {
+        $(".btn").click(function (event) {
+            // Removes focus of the button.
+            $(this).blur();
+        });
         $('#player-question-container-multi').hide();
         $('#player-question-container-open').hide();
         $('#player-question-ok-container').hide();
