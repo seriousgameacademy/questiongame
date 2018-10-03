@@ -136,10 +136,9 @@ io.on('connection', function (socket) {
         
         var data = { question: questions[questionselected], questionselected: questionselected }
         console.log(data);
-        io.sockets.emit('newquestion', data);
-
         updateGameStateAll('question', questions[questionselected].type);
         setAdminStatusMessage('Weet jij het goede antwoord?...');
+        io.sockets.emit('newquestion', data);
     })
 
     socket.on('getGameRanking', function () {

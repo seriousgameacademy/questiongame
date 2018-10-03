@@ -53,6 +53,7 @@
         position: fixed;
         left: 0;
         bottom: 0;
+        z-index: 50;
         width: 100%;
         border-top: 5px solid white;
         min-height: 50px;
@@ -102,7 +103,6 @@
         position: relative;
         width: 430px;
         height: 75px;
-        padding: 0px;
         background: #FFFFFF;
         -webkit-border-radius: 10px;
         -moz-border-radius: 10px;
@@ -110,7 +110,8 @@
         border: #000000 solid 4px;
         color: #000000;
         padding: 7px;
-        margin-bottom:15px;
+        padding-left: 12px;
+        margin-bottom: 15px;
         font-size: 0.9em;
     }
 
@@ -231,6 +232,8 @@
     var mode = null;
     var currentQuestionAnswer;
     var totalamountplayers = 0;
+    var timerAdmin = 25;
+    var gamestate;
     
     function setUsername() {
         socket.username = document.getElementById('name').value
@@ -255,6 +258,8 @@
     }
 
     function setGameState(data) {
+
+        gamestate = data.state;
         // Hide all
         $('#admin-question-container-multi').hide();
         $('#admin-question-container-open').hide();
@@ -355,7 +360,9 @@
         $('#player-question-open-ok-container').hide();
 
         if (currentQuestionAnswer == answer) {
-            socket.emit('registerScore', { name: socket.username, points: 150 })
+            var pointsscored = Math.floor(Math.random() * 100);
+            pointsscored = pointsscored + 150;
+            socket.emit('registerScore', { name: socket.username, points: pointsscored })
             $('#player-question-ok-container').show();
             localStorage.setItem('answered', 'ok');
         }
@@ -445,24 +452,25 @@
 
     socket.on('newquestion', function (data) {
         console.log(data);
-        if (mode == 'admin') {
+        if (mode == 'admin' && gamestate == 'question') {
             $('.question-question').html(data.question.question);
-
-            var timer = 25;
-            $('#timer-seconds').html(timer);
-            var myVar = setInterval(function () {
-
-                timer = timer - 1;
-                // Get todays date and time
-                $('#timer-seconds').html(timer);
-
-                if (timer == 0) {
-                    getQuestionResult();
-                    clearInterval(myVar);
-                }
-            }, 1000);
+            
             
             if (data.question.type == 'multiple') {
+                timerAdmin = 25;
+                $('#timer-seconds').html(timerAdmin);
+                var myVar = setInterval(function () {
+
+                    timerAdmin = timerAdmin - 1;
+                    // Get todays date and time
+                    $('#timer-seconds').html(timerAdmin);
+
+                    if (timerAdmin == 0) {
+                        getQuestionResult();
+                        clearInterval(myVar);
+                    }
+                }, 1000);
+
                 $('.answer-a').html(data.question.A);
                 $('.answer-b').html(data.question.B);
                 $('.answer-c').html(data.question.C);
@@ -640,7 +648,7 @@
                 <div class="text-center">
                     <form>
                         <div class="form-group">
-                            <input id="name" class="form-control input-username" type="text" name="name" value="" maxlength="20" aria-describedby="emailHelp" placeholder="Vul in je naam!">
+                            <input id="name" class="form-control input-username" type="text" name="name" value="" maxlength="19" aria-describedby="emailHelp" placeholder="Vul in je naam!">
 
                             <small id="emailHelp" class="form-text">We'll never share your name with anyone else...;-) watch the big screen!</small>
                         </div>
@@ -1020,82 +1028,82 @@
                     </div>
                     <div class="col-sm-12">
                         <div class="row" id="player_01_container">
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <h3>01. <span id="player_name_01">Speler 1</span></h3>
                             </div>
-                            <div class="col-sm-4" style="text-align: right">
+                            <div class="col-sm-3" style="text-align: right">
                                 <h3><span id="player_score_01">850</span> punten</h3>
                             </div>
                         </div>
                         <div class="row" id="player_02_container">
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <h3>02. <span id="player_name_02">Speler 2</span></h3>
                             </div>
-                            <div class="col-sm-4" style="text-align: right">
+                            <div class="col-sm-3" style="text-align: right">
                                 <h3><span id="player_score_02">710</span> punten</h3>
                             </div>
                         </div>
                         <div class="row" id="player_03_container">
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <h3>03. <span id="player_name_03">Speler 3</span></h3>
                             </div>
-                            <div class="col-sm-4" style="text-align: right">
+                            <div class="col-sm-3" style="text-align: right">
                                 <h3><span id="player_score_03">630</span> punten</h3>
                             </div>
                         </div>
                         <div class="row" id="player_04_container">
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <h3>04. <span id="player_name_04">Speler 4</span></h3>
                             </div>
-                            <div class="col-sm-4" style="text-align: right">
+                            <div class="col-sm-3" style="text-align: right">
                                 <h3><span id="player_score_04">500</span> punten</h3>
                             </div>
                         </div>
                         <div class="row" id="player_05_container">
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <h3>05. <span id="player_name_05">Speler 5</span></h3>
                             </div>
-                            <div class="col-sm-4" style="text-align: right">
+                            <div class="col-sm-3" style="text-align: right">
                                 <h3><span id="player_score_05">450</span> punten</h3>
                             </div>
                         </div>
                         <div class="row" id="player_06_container">
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <h3>06. <span id="player_name_06">Speler 6</span></h3>
                             </div>
-                            <div class="col-sm-4" style="text-align: right">
+                            <div class="col-sm-3" style="text-align: right">
                                 <h3><span id="player_score_06">300</span> punten</h3>
                             </div>
                         </div>
                         <div class="row" id="player_07_container">
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <h3>07. <span id="player_name_07">Speler 7</span></h3>
                             </div>
-                            <div class="col-sm-4" style="text-align: right">
+                            <div class="col-sm-3" style="text-align: right">
                                 <h3><span id="player_score_07">150</span> punten</h3>
                             </div>
                         </div>
                         <div class="row" id="player_08_container">
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <h3>08. <span id="player_name_08">Speler 8</span></h3>
                             </div>
-                            <div class="col-sm-4" style="text-align: right">
+                            <div class="col-sm-3" style="text-align: right">
                                 <h3><span id="player_score_08">50</span> punten</h3>
                             </div>
                         </div>
                         <div class="row" id="player_09_container">
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <h3>09. <span id="player_name_09">Speler 9</span></h3>
                             </div>
-                            <div class="col-sm-4" style="text-align: right">
+                            <div class="col-sm-3" style="text-align: right">
                                 <h3><span id="player_score_09">50</span> punten</h3>
                             </div>
                         </div>
                         <div class="row" id="player_10_container">
-                            <div class="col-sm-8">
+                            <div class="col-sm-9">
                                 <h3>10. <span id="player_name_10">Speler 10</span></h3>
                             </div>
-                            <div class="col-sm-4" style="text-align: right">
+                            <div class="col-sm-3" style="text-align: right">
                                 <h3><span id="player_score_10">0</span> punten</h3>
                             </div>
                         </div>
