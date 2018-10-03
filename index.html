@@ -238,6 +238,7 @@
     var currentQuestionAnswer;
     var totalamountplayers = 0;
     var timerAdmin = 25;
+    var timerGameover = 20;
     var gamestate;
     
     function setUsername() {
@@ -317,6 +318,19 @@
         }
         if (data.state == 'gameover' && mode == 'player') {
             $('#player-gameover-container').show();
+            timerGameover = 20;
+
+            var myVar1 = setInterval(function () {
+
+                timerGameover = timerGameover - 1;
+                
+            
+                if (timerGameover == 0) {
+                    clearInterval(myVar1);
+                    window.location.href = "https://www.zuiderzeeland.nl/"
+                }
+            }, 1000);
+
         }
         if (data.state == 'start' && mode == 'admin') {
             $("#admin-container").show();
