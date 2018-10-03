@@ -222,6 +222,11 @@
         margin-top: 10px;
         margin-right: 10px;
     }
+
+    *:focus {
+        outline: none !important;
+    }
+
 </style>
 
 
@@ -720,16 +725,16 @@
         </div>
         <div class="footer">
             <div>
-                <a href="javascript:void(0);" onclick="setAnswer('A');" class="btn btn-info btn-block-custom" target="_self">Antwoord A</a>
+                <a href="javascript:void(0);" onclick="setAnswer('A');" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Antwoord A</a>
             </div>
             <div>
-                <a href="javascript:void(0);" onclick="setAnswer('B');" class="btn btn-info btn-block-custom" target="_self">Antwoord B</a>
+                <a href="javascript:void(0);" onclick="setAnswer('B');" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Antwoord B</a>
             </div>
             <div>
-                <a href="javascript:void(0);" onclick="setAnswer('C');;" class="btn btn-info btn-block-custom" target="_self">Antwoord C</a>
+                <a href="javascript:void(0);" onclick="setAnswer('C');;" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Antwoord C</a>
             </div>
             <div>
-                <a href="javascript:void(0);" onclick="setAnswer('D');" class="btn btn-info btn-block-custom" target="_self">Antwoord D</a>
+                <a href="javascript:void(0);" onclick="setAnswer('D');" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Antwoord D</a>
             </div>
         </div>
 
@@ -790,7 +795,7 @@
                     </g>
                 </svg>
             </div>
-            <div class="col-sm-12 text-center">
+            <div class="col-sm-12 text-center" style="margin: 1px;">
                 <h2>Watch the big screen for the results!</h2>
             </div>
         </div>
