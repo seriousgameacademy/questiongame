@@ -240,6 +240,11 @@
     var timerAdmin = 25;
     var timerGameover = 20;
     var gamestate;
+
+    $("a").click(function (e) {
+        $(this).blur();
+        e.preventDefault();
+    });
     
     function setUsername() {
         socket.username = document.getElementById('name').value
