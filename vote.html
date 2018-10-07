@@ -1,0 +1,330 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="/">
+    <title>Question Game - Serious Game Academy</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <!-- Required meta tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <!-- MUST have, so iPhone doesn't autozoom and change the fontsize! -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript">
+        var devicewidth = window.screen.width;
+        var deviceheight = window.screen.height;
+        var devicemin = Math.min(devicewidth, deviceheight);
+        // say we want base font size: 16px @ 600px (min of 800x600); 16/600 = 0.0266667
+        var basefontsize = Math.round(0.0267 * devicemin);
+        // apply:
+        var rootElement = document.documentElement;
+        rootElement.style.fontSize = basefontsize;
+        // report:
+        console.log(navigator.userAgent);
+        var report = "device res: " + devicewidth + " x " + deviceheight + " ; base font size: " + basefontsize + "/" + rootElement.style.fontSize;
+        console.log(report);
+    </script>
+</head>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif !important;
+        
+        -webkit-text-size-adjust: none;
+        color: #FFFFFF;
+        background-color: #27abde !important;
+        height: 100%;
+    }
+
+    #message-welkom-text {
+        text-align: center;
+        font-size: 4em;
+    }
+
+    #message-welkom-user {
+        text-align: center;
+        font-size: 3em;
+    }
+
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 50;
+        width: 100%;
+        border-top: 5px solid white;
+        min-height: 50px;
+        background-color: orange;
+        text-align: center;
+        color: white;
+        /*display: none;*/
+    }
+
+    .overlay-ok {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background-color: seagreen;
+        text-align: center;
+        color: white;
+    }
+
+    .overlay-nok {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background-color: darkred;
+        text-align: center;
+        color: white;
+    }
+
+    .overlay-gameover {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background-color: #27abde;
+        text-align: center;
+        color: white;
+    }
+
+    .bubble {
+        position: relative;
+        width: 430px;
+        height: 75px;
+        background: #FFFFFF;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        border: #000000 solid 4px;
+        color: #000000;
+        padding: 7px;
+        padding-left: 12px;
+        margin-bottom: 15px;
+        font-size: 0.9em;
+    }
+
+        .bubble:after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 8px 33px 8px 0;
+            border-color: transparent #FFFFFF;
+            display: block;
+            width: 0;
+            z-index: 1;
+            left: -33px;
+            top: 14px;
+        }
+
+        .bubble:before {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 11px 36px 11px 0;
+            border-color: transparent #000000;
+            display: block;
+            width: 0;
+            z-index: 0;
+            left: -40px;
+            top: 11px;
+        }
+    .btn-block-custom {
+        display: block;
+        width: auto;
+        margin-left: 15px;
+        margin-right: 15px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: #27abde;
+        border-color: #fff;
+    }
+
+    .spinner{
+        text-align: center;
+    }
+
+    #message-send-container{
+        display:none;
+    }
+
+    #player-welcome-container {
+        display: none;
+    }
+
+    #admin-container {
+        display: none;
+    }
+
+    a {
+        color: #337ab7;
+        text-decoration: none;
+    }
+
+    /* Make sure that padding behaves as expected */
+    * {
+        box-sizing: border-box
+    }
+
+    /* Container for skill bars */
+    .container-skill-bar {
+        width: 100%; /* Full width */
+        background-color: #ddd; /* Grey background */
+        margin-bottom: 10px;
+    }
+
+    .skills {
+        text-align: right; /* Right-align text */
+        padding: 5px; /* Add some padding */
+        color: white; /* White text color */
+    }
+
+    .answer-bar-a {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Green */
+    .answer-bar-b {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Blue */
+    .answer-bar-c {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Red */
+    .answer-bar-d {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Dark Grey */
+
+    .fullscreen-image {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+
+    *:focus {
+        outline: 0 !important;
+    }
+
+</style>
+
+
+<script> 
+
+    $(document).ready(function () {
+        getVotes();
+    });
+
+    function registerVoteBlock(id, points) {
+
+        var request = { description: descriptionVote, name: socket.username };
+        var datastring = JSON.stringify(request);
+
+        $.ajax({
+            url: 'http://seriousgameacademyui.azurewebsites.net/api/VoteGameService/RegisterVoteBlock',
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: datastring,
+            success: function (data, textStatus, xhr) {
+                console.log(data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+            }
+        });
+
+    }
+
+    function getVotes() {
+        
+        $.ajax({
+            url: 'http://localhost:4396/api/VoteGameService/GetVotes',
+            type: 'GET',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: null,
+            success: function (data, textStatus, xhr) {
+                console.log(data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+            }
+        });
+
+    }
+
+    var elem = document.documentElement;
+    function openFullscreen() {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) { /* Firefox */
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE/Edge */
+            elem.msRequestFullscreen();
+        }
+
+        $('#fullscreen-container-open').hide();
+        $('#fullscreen-container-close').show();
+    }
+
+    function closeFullscreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+
+        $('#fullscreen-container-open').show();
+        $('#fullscreen-container-close').hide();
+    }
+</script>
+<body>
+    <div id="player-vote" class="container">
+        <div class="row row-centered" style="margin-top:30px;">
+            <div class="col-sm-12 text-center">
+                <h1>Wat vind je van dit idee?</h1>
+            </div>
+            <div class="col-sm-12 text-center">
+                <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare arcu at molestie mattis. Sed euismod, lectus nec rhoncus metus.</h3>
+            </div>
+        </div>
+        <div class="footer">
+            <div>
+                <a href="javascript:void(0);" onclick="setVoteBlock(1);" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Leuk!</a>
+            </div>
+            <div>
+                <a href="javascript:void(0);" onclick="setVoteBlock(0);" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Minder leuk...</a>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
