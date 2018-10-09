@@ -396,13 +396,6 @@
     }
 
     function setAnswer(answer) {
-        $(".btn").click(function (event) {
-            // Removes focus of the button.
-            $(this).blur();
-        });
-
-        $("#dummy-btn").click();
-
         $('#player-question-container-multi').hide();
         $('#player-question-container-open').hide();
         $('#player-question-ok-container').hide();
@@ -809,9 +802,6 @@
             </div>
             <div class="col-sm-12 text-center">
                 <button type="button" name="button" class="vote-btn btn btn-info btn-block-custom-footer" onclick="setAnswer('D');">Antwoord D</button>
-            </div>
-            <div class="col-sm-12 text-center" style="display:none;">
-                <button type="button" id="dummy-btn" name="button" class="vote-btn btn btn-info btn-block-custom-footer" onclick="">Dummy</button>
             </div>
         </div>
 
