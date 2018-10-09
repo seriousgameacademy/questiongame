@@ -400,6 +400,9 @@
             // Removes focus of the button.
             $(this).blur();
         });
+
+        $("#dummy-btn").click();
+
         $('#player-question-container-multi').hide();
         $('#player-question-container-open').hide();
         $('#player-question-ok-container').hide();
@@ -453,6 +456,10 @@
         });
   
     }
+
+    $("#dummy-btn").click(function () {
+        // fake dummy click
+    });
 
     function setGameRanking(playerscores) {
         $('#player_01_container').hide();
@@ -792,16 +799,19 @@
         <div class="footer">
             <div class="row row-centered"></div>
             <div class="col-sm-12 text-center">
-                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom-footer" onclick="setAnswer('A');">Antwoord A</button>
+                <button type="button" name="button" class="vote-btn btn btn-info btn-block-custom-footer" onclick="setAnswer('A');">Antwoord A</button>
             </div>
             <div class="col-sm-12 text-center">
-                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom-footer" onclick="setAnswer('B');">Antwoord B</button>
+                <button type="button" name="button" class="vote-btn btn btn-info btn-block-custom-footer" onclick="setAnswer('B');">Antwoord B</button>
             </div>
             <div class="col-sm-12 text-center">
-                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom-footer" onclick="setAnswer('C');">Antwoord C</button>
+                <button type="button" name="button" class="vote-btn btn btn-info btn-block-custom-footer" onclick="setAnswer('C');">Antwoord C</button>
             </div>
             <div class="col-sm-12 text-center">
-                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom-footer" onclick="setAnswer('D');">Antwoord D</button>
+                <button type="button" name="button" class="vote-btn btn btn-info btn-block-custom-footer" onclick="setAnswer('D');">Antwoord D</button>
+            </div>
+            <div class="col-sm-12 text-center" style="display:none;">
+                <button type="button" id="dummy-btn" name="button" class="vote-btn btn btn-info btn-block-custom-footer" onclick="">Dummy</button>
             </div>
         </div>
 
