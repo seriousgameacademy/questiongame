@@ -396,6 +396,8 @@
     }
 
     function setAnswer(answer) {
+        $('.vote-btn').attr('disabled', 'disabled');
+
         $('#player-question-container-multi').hide();
         $('#player-question-container-open').hide();
         $('#player-question-ok-container').hide();
@@ -416,6 +418,10 @@
         }
         
         socket.emit('setSocketQuestionAnswer', { answer: answer, questionselected: questionselected, username: socket.username });
+
+        setTimeout(function () {
+            $('.vote-btn').removeAttr('disabled');
+        }, 100);
     }
 
     function setOpenAnswer() {
@@ -449,11 +455,7 @@
         });
   
     }
-
-    $("#dummy-btn").click(function () {
-        // fake dummy click
-    });
-
+    
     function setGameRanking(playerscores) {
         $('#player_01_container').hide();
         $('#player_02_container').hide();
