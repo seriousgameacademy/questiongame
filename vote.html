@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <base href="/">
-    <title>Question Game - Serious Game Academy</title>
+    <title>Vote Game - Serious Game Academy</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <!-- Required meta tags -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -142,9 +142,7 @@
         }
     .btn-block-custom {
         display: block;
-        width: auto;
-        margin-left: 15px;
-        margin-right: 15px;
+        width: 100%;
         margin-top: 15px;
         margin-bottom: 15px;
     }
@@ -267,12 +265,115 @@
             data: null,
             success: function (data, textStatus, xhr) {
                 console.log(data);
+                setVoteGameDetails(data.Votes);
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log('Error in Operation');
             }
         });
 
+    }
+
+    var indexVoteToShow = 0;
+    var shuffledVotes;
+    function setVoteGameDetails(votes) {
+        shuffledVotes = shuffle(votes)
+        // Todo loader container
+
+        $('#vote-container-ok').hide();
+        $('#vote-container-nok').hide();
+        $('#player-vote-container').show();
+        indexVoteToShow = 0;
+        $('#vote-description').html(votes[indexVoteToShow].Description);
+    }
+
+    function shuffle(votes) {
+        var ctr = votes.length, temp, index;
+
+        // While there are elements in the array
+        while (ctr > 0) {
+            // Pick a random index
+            index = Math.floor(Math.random() * ctr);
+            // Decrease ctr by 1
+            ctr--;
+            // And swap the last element with it
+            temp = votes[ctr];
+            votes[ctr] = votes[index];
+            votes[index] = temp;
+        }
+        return votes;
+    }
+
+    function setVoteBlock(isILikeThis) {
+
+        $('.vote-btn').attr('disabled', 'disabled');
+
+        $('#player-vote-container').hide();
+        $('#vote-container-ok').hide();
+        $('#vote-container-nok').hide();
+        if (isILikeThis) {
+            registerVoteBlock(shuffledVotes[indexVoteToShow].VoteId, "65")
+            $('#vote-container-ok').show();
+        }
+        else {
+            $('#vote-container-nok').show();
+        }
+
+        setTimeout(function () {
+            $('.vote-btn').removeAttr('disabled');
+        }, 100);
+    }
+
+    function registerVoteBlock(voteid, votepoints) {
+
+        var request = { id: voteid, points: votepoints };
+        var datastring = JSON.stringify(request);
+
+        $.ajax({
+            url: 'http://seriousgameacademyui.azurewebsites.net/api/VoteGameService/RegisterVoteBlock',
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: datastring,
+            success: function (data, textStatus, xhr) {
+                console.log(data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+            }
+        });
+
+    }
+
+    function getNextVote() {
+        indexVoteToShow = indexVoteToShow + 1;
+        $('#vote-container-ok').hide();
+        $('#vote-container-nok').hide();
+        $('#player-vote-container').hide();
+
+        if (indexVoteToShow < shuffledVotes.length) {
+            $('#player-vote-container').show();
+            $('#vote-description').html(shuffledVotes[indexVoteToShow].Description);
+            return;
+        }
+
+        $('#player-vote-gameover').show();
+        timerGameover = 20;
+
+        var myVar1 = setInterval(function () {
+
+            timerGameover = timerGameover - 1;
+
+
+            if (timerGameover == 0) {
+                clearInterval(myVar1);
+                getOutOfHere()
+            }
+        }, 1000);
+    }
+
+    function getOutOfHere() {
+        window.location.href = "https://www.zuiderzeeland.nl/"
     }
 
     var elem = document.documentElement;
@@ -307,24 +408,81 @@
     }
 </script>
 <body>
-    <div id="player-vote" class="container">
+    <div id="player-vote-container" class="container" style="display:none;">
         <div class="row row-centered" style="margin-top:30px;">
             <div class="col-sm-12 text-center">
                 <h1>Wat vind je van dit idee?</h1>
             </div>
             <div class="col-sm-12 text-center">
-                <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ornare arcu at molestie mattis. Sed euismod, lectus nec rhoncus metus.</h3>
+                <h3><span id="vote-description"></span></h3>
             </div>
         </div>
         <div class="footer">
-            <div>
-                <a href="javascript:void(0);" onclick="setVoteBlock(1);" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Leuk!</a>
+            <div class="row row-centered"></div>
+            <div class="col-sm-12 text-center">
+                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom" onclick="setVoteBlock(true);">Leuk!</button>
             </div>
-            <div>
-                <a href="javascript:void(0);" onclick="setVoteBlock(0);" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Minder leuk...</a>
+            <div class="col-sm-12 text-center">
+                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom" onclick="setVoteBlock(false);">Minder leuk...</button>
             </div>
         </div>
+    </div>
+    <div id="vote-container-ok" class="container" style="display:none;">
+        <div class="row row-centered" style="margin-top:30px;">
+            <div class="col-sm-12 text-center">
+                <h1>Bedankt voor je stem!</h1>
+            </div>
+            <div class="col-sm-12 text-center">
+                <svg style="width: 175px;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 252 252"><g transform="translate(10.206,10.206) scale(0.919,0.919)"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="none" stroke-linecap="butt" stroke-linejoin="none" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g id="Layer_1 1" stroke="#ffffff" stroke-width="22" stroke-linejoin="round"><path d="M231,126c0,57.75 -47.25,105 -105,105c-57.75,0 -105,-47.25 -105,-105c0,-57.75 47.25,-105 105,-105c57.75,0 105,47.25 105,105z" fill="#ffca28"></path><path d="M110.25,120.75c0,11.55 -9.45,21 -21,21c-11.55,0 -21,-9.45 -21,-21c0,-11.55 9.45,-21 21,-21c11.55,0 21,9.45 21,21z" fill="#6d4c41"></path><path d="M89.25,112.875c0,4.2 -3.675,7.875 -7.875,7.875c-4.2,0 -7.875,-3.675 -7.875,-7.875c0,-4.2 3.675,-7.875 7.875,-7.875c4.2,0 7.875,3.675 7.875,7.875z" fill="#ffffff"></path><path d="M183.75,120.75c0,11.55 -9.45,21 -21,21c-11.55,0 -21,-9.45 -21,-21c0,-11.55 9.45,-21 21,-21c11.55,0 21,9.45 21,21z" fill="#6d4c41"></path><path d="M162.75,112.875c0,4.2 -3.675,7.875 -7.875,7.875c-4.2,0 -7.875,-3.675 -7.875,-7.875c0,-4.2 3.675,-7.875 7.875,-7.875c4.2,0 7.875,3.675 7.875,7.875z" fill="#ffffff"></path><path d="M126,194.25c-14.7,0 -26.25,-11.55 -26.25,-26.25h10.5c0,8.925 6.825,15.75 15.75,15.75c8.925,0 15.75,-6.825 15.75,-15.75h10.5c0,14.7 -11.55,26.25 -26.25,26.25z" fill="#b76c09"></path></g><path d="M0,252v-252h252v252z" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><g id="Layer_1" stroke="none" stroke-width="1" stroke-linejoin="miter"><path d="M231,126c0,57.75 -47.25,105 -105,105c-57.75,0 -105,-47.25 -105,-105c0,-57.75 47.25,-105 105,-105c57.75,0 105,47.25 105,105z" fill="#ffca28"></path><path d="M110.25,120.75c0,11.55 -9.45,21 -21,21c-11.55,0 -21,-9.45 -21,-21c0,-11.55 9.45,-21 21,-21c11.55,0 21,9.45 21,21z" fill="#6d4c41"></path><path d="M89.25,112.875c0,4.2 -3.675,7.875 -7.875,7.875c-4.2,0 -7.875,-3.675 -7.875,-7.875c0,-4.2 3.675,-7.875 7.875,-7.875c4.2,0 7.875,3.675 7.875,7.875z" fill="#ffffff"></path><path d="M183.75,120.75c0,11.55 -9.45,21 -21,21c-11.55,0 -21,-9.45 -21,-21c0,-11.55 9.45,-21 21,-21c11.55,0 21,9.45 21,21z" fill="#6d4c41"></path><path d="M162.75,112.875c0,4.2 -3.675,7.875 -7.875,7.875c-4.2,0 -7.875,-3.675 -7.875,-7.875c0,-4.2 3.675,-7.875 7.875,-7.875c4.2,0 7.875,3.675 7.875,7.875z" fill="#ffffff"></path><path d="M126,194.25c-14.7,0 -26.25,-11.55 -26.25,-26.25h10.5c0,8.925 6.825,15.75 15.75,15.75c8.925,0 15.75,-6.825 15.75,-15.75h10.5c0,14.7 -11.55,26.25 -26.25,26.25z" fill="#b76c09"></path></g><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path></g></g></svg>
+            </div>
+            <div class="col-sm-12 text-center">
+                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom" onclick="getNextVote()">Volgende idee graag!</button>
+            </div>
+            <div class="footer" style="height: 150px;">
+                <div class="row row-centered"></div>
 
+            </div>
+        </div>
+    </div>
+    <div id="vote-container-nok" class="container" style="display:none;">
+        <div class="row row-centered" style="margin-top:30px;">
+            <div class="col-sm-12 text-center">
+                <h1>Bedankt voor je stem!</h1>
+            </div>
+            <div class="col-sm-12 text-center">
+                <svg style="width:175px;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 252 252"><g transform="translate(10.962,10.962) scale(0.913,0.913)"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="none" stroke-linecap="butt" stroke-linejoin="none" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g id="Layer_1_1_ 1" stroke="#ffffff" stroke-width="22" stroke-linejoin="round"><path d="M21,126c0,-57.9899 47.0101,-105 105,-105c57.9899,0 105,47.0101 105,105c0,57.9899 -47.0101,105 -105,105c-57.9899,0 -105,-47.0101 -105,-105z" fill="#ffca28"></path><path d="M68.25,118.125c0,-13.04773 9.40202,-23.625 21,-23.625c11.59798,0 21,10.57727 21,23.625c0,13.04773 -9.40202,23.625 -21,23.625c-11.59798,0 -21,-10.57727 -21,-23.625z" fill="#6d4c41"></path><path d="M73.5,112.875c0,-4.34924 3.52576,-7.875 7.875,-7.875c4.34924,0 7.875,3.52576 7.875,7.875c0,4.34924 -3.52576,7.875 -7.875,7.875c-4.34924,0 -7.875,-3.52576 -7.875,-7.875z" fill="#ffffff"></path><path d="M183.75,121.8v4.2c0,5.775 -4.725,10.5 -10.5,10.5h-21c-5.775,0 -10.5,-4.725 -10.5,-10.5v-5.25c0,-11.55 9.45,-21 21,-21c0.525,0 1.575,0 2.1,0c11.025,1.05 18.9,11.025 18.9,22.05z" fill="#6d4c41"></path><path d="M147,112.875c0,-4.34924 3.52576,-7.875 7.875,-7.875c4.34924,0 7.875,3.52576 7.875,7.875c0,4.34924 -3.52576,7.875 -7.875,7.875c-4.34924,0 -7.875,-3.52576 -7.875,-7.875z" fill="#ffffff"></path><path d="M94.5,189v-10.5c13.65,0 21,-3.15 27.825,-5.775c5.775,-2.625 11.025,-4.725 18.9,-4.725c12.075,0 19.95,6.825 20.475,7.35l-6.825,7.875c0,0 -5.25,-4.725 -13.125,-4.725c-5.775,0 -9.45,1.575 -14.7,3.675c-7.875,3.15 -16.8,6.825 -32.55,6.825z" fill="#b76c09"></path></g><path d="M0,252v-252h252v252z" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><g id="Layer_1_1_" stroke="none" stroke-width="1" stroke-linejoin="miter"><circle cx="24" cy="24" transform="scale(5.25,5.25)" r="20" fill="#ffca28"></circle><ellipse cx="17" cy="22.5" transform="scale(5.25,5.25)" rx="4" ry="4.5" fill="#6d4c41"></ellipse><circle cx="15.5" cy="21.5" transform="scale(5.25,5.25)" r="1.5" fill="#ffffff"></circle><path d="M183.75,121.8v4.2c0,5.775 -4.725,10.5 -10.5,10.5h-21c-5.775,0 -10.5,-4.725 -10.5,-10.5v-5.25c0,-11.55 9.45,-21 21,-21c0.525,0 1.575,0 2.1,0c11.025,1.05 18.9,11.025 18.9,22.05z" fill="#6d4c41"></path><circle cx="29.5" cy="21.5" transform="scale(5.25,5.25)" r="1.5" fill="#ffffff"></circle><path d="M94.5,189v-10.5c13.65,0 21,-3.15 27.825,-5.775c5.775,-2.625 11.025,-4.725 18.9,-4.725c12.075,0 19.95,6.825 20.475,7.35l-6.825,7.875c0,0 -5.25,-4.725 -13.125,-4.725c-5.775,0 -9.45,1.575 -14.7,3.675c-7.875,3.15 -16.8,6.825 -32.55,6.825z" fill="#b76c09"></path></g><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path><path d="" fill="none" stroke="none" stroke-width="1" stroke-linejoin="miter"></path></g></g></svg>
+            </div>
+            <div class="col-sm-12 text-center">
+                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom" onclick="getNextVote()">Volgende idee graag!</button>
+            </div>
+            <div class="footer" style="height: 150px;">
+                <div class="row row-centered"></div>
+            </div>
+        </div>
+    </div>
+    <div id="player-vote-gameover" style="display: none;" class="container">
+        <div class="row row-centered" style="margin-top:30px;">
+            <div class="col-sm-12 text-center">
+                <div class="text-center" style="margin-bottom:25px">
+                    <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class="" />
+                </div>
+            </div>
+
+            <div class="col-sm-12 text-center">
+                <h1>Nog even geduld...</h1>
+            </div>
+            <div class="col-sm-12 text-center">
+                <h3>We maken straks het beste idee bekend.</h3>
+            </div>
+            <div class="col-sm-12 text-center" style="margin-top: 20px;"> 
+                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom" onclick="getOutOfHere()">Get Out Of Here!</button>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="col-sm-12 text-center" style="margin-top: 60px; margin-bottom: 60px;">
+                <h1>GAME OVER</h1>
+            </div>
+        </div>
     </div>
 </body>
 </html>

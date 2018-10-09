@@ -150,6 +150,13 @@
         margin-bottom: 15px;
     }
 
+    .btn-block-custom-footer {
+        display: block;
+        width: 100%;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
     .btn-info {
         color: #fff;
         background-color: #27abde;
@@ -248,10 +255,17 @@
     });
     
     function setUsername() {
-        socket.username = document.getElementById('name').value
-        $('#start-btn').attr('disabled', 'disabled');
-        socket.emit('setUsername', document.getElementById('name').value);
         $("#error-container").hide();
+        var name = document.getElementById('name').value
+        if (name == null || name == '') {
+            $("#error-container").html('Je vergeet je naam in te vullen.');
+            $("#error-container").show();
+            return;
+        }
+        socket.username = name;
+
+        $('#start-btn').attr('disabled', 'disabled');
+        socket.emit('setUsername', name);
     };
 
     function sendMessage() {
@@ -333,7 +347,7 @@
             
                 if (timerGameover == 0) {
                     clearInterval(myVar1);
-                    window.location.href = "https://www.zuiderzeeland.nl/"
+                    getOutOfHere();
                 }
             }, 1000);
 
@@ -369,6 +383,10 @@
         }
 
 
+    }
+
+    function getOutOfHere() {
+        window.location.href = "https://www.zuiderzeeland.nl/"
     }
 
     function setAdminStatusMessage(message) {
@@ -701,19 +719,20 @@
                     <form>
                         <div class="form-group">
                             <input id="name" class="form-control input-username" type="text" name="name" value="" maxlength="19" aria-describedby="emailHelp" placeholder="Vul in je naam!">
-
-                            <small id="emailHelp" class="form-text">We'll never share your name with anyone else...;-) watch the big screen!</small>
                         </div>
-
                     </form>
                     <div id="error-container"></div>
                 </div>
-                <div class="text-center">
+                <div class="text-center" style="margin-top: 20px;">
                     <button type="button" id="start-btn" name="button" class="btn btn-info btn-lg btn-block" onclick="setUsername()">Start</button>
                 </div>
+
             </div>
             <div class="col-sm-4">
 
+            </div>
+            <div class="col-sm-12 text-center" style="margin-top: 40px;">
+                <h3>Enjoy playing this game...</h3>
             </div>
         </div>
     </div>
@@ -771,17 +790,18 @@
             </div>
         </div>
         <div class="footer">
-            <div>
-                <a href="javascript:void(0);" onclick="setAnswer('A');" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Antwoord A</a>
+            <div class="row row-centered"></div>
+            <div class="col-sm-12 text-center">
+                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom-footer" onclick="setAnswer('A');">Antwoord A</button>
             </div>
-            <div>
-                <a href="javascript:void(0);" onclick="setAnswer('B');" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Antwoord B</a>
+            <div class="col-sm-12 text-center">
+                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom-footer" onclick="setAnswer('B');">Antwoord B</button>
             </div>
-            <div>
-                <a href="javascript:void(0);" onclick="setAnswer('C');;" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Antwoord C</a>
+            <div class="col-sm-12 text-center">
+                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom-footer" onclick="setAnswer('C');">Antwoord C</button>
             </div>
-            <div>
-                <a href="javascript:void(0);" onclick="setAnswer('D');" class="btn btn-info btn-block-custom" style="text-decoration: none !important;" target="_self">Antwoord D</a>
+            <div class="col-sm-12 text-center">
+                <button type="button" name="button" class="vote-btn btn btn-info btn-lg btn-block-custom-footer" onclick="setAnswer('D');">Antwoord D</button>
             </div>
         </div>
 
@@ -888,6 +908,9 @@
                 <div class="text-center" style="margin-bottom:25px">
                     <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class="" />
                 </div>
+            </div>
+            <div class="col-sm-12 text-center" style="margin-top: 20px;">
+                <button type="button" name="button" class="btn btn-info btn-block-custom-footer" onclick="getOutOfHere()">Get Out Of Here!</button>
             </div>
         </div>
         <div class="footer" style="height: 150px;">
