@@ -1,0 +1,542 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="/">
+    <title>Vote Game - Serious Game Academy</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <!-- Required meta tags -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <!-- MUST have, so iPhone doesn't autozoom and change the fontsize! -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <script type="text/javascript">
+        var devicewidth = window.screen.width;
+        var deviceheight = window.screen.height;
+        var devicemin = Math.min(devicewidth, deviceheight);
+        // say we want base font size: 16px @ 600px (min of 800x600); 16/600 = 0.0266667
+        var basefontsize = Math.round(0.0267 * devicemin);
+        // apply:
+        var rootElement = document.documentElement;
+        rootElement.style.fontSize = basefontsize;
+        // report:
+        console.log(navigator.userAgent);
+        var report = "device res: " + devicewidth + " x " + deviceheight + " ; base font size: " + basefontsize + "/" + rootElement.style.fontSize;
+        console.log(report);
+    </script>
+</head>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif !important;
+        
+        -webkit-text-size-adjust: none;
+        color: #FFFFFF;
+        background-color: #27abde !important;
+        height: 100%;
+    }
+
+    #message-welkom-text {
+        text-align: center;
+        font-size: 4em;
+    }
+
+    #message-welkom-user {
+        text-align: center;
+        font-size: 3em;
+    }
+
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        z-index: 50;
+        width: 100%;
+        border-top: 5px solid white;
+        min-height: 50px;
+        background-color: orange;
+        text-align: center;
+        color: white;
+        /*display: none;*/
+    }
+
+    .overlay-ok {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background-color: seagreen;
+        text-align: center;
+        color: white;
+    }
+
+    .overlay-nok {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background-color: darkred;
+        text-align: center;
+        color: white;
+    }
+
+    .overlay-gameover {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background-color: #27abde;
+        text-align: center;
+        color: white;
+    }
+
+    .bubble {
+        position: relative;
+        width: 430px;
+        height: 75px;
+        background: #FFFFFF;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        border: #000000 solid 4px;
+        color: #000000;
+        padding: 7px;
+        padding-top: 19px;
+        padding-left: 12px;
+        margin-bottom: 15px;
+        font-size: 0.9em;
+    }
+
+        /*.bubble:after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 8px 33px 8px 0;
+            border-color: transparent #FFFFFF;
+            display: block;
+            width: 0;
+            z-index: 1;
+            left: -33px;
+            top: 14px;
+        }
+
+        .bubble:before {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 11px 36px 11px 0;
+            border-color: transparent #000000;
+            display: block;
+            width: 0;
+            z-index: 0;
+            left: -40px;
+            top: 11px;
+        }*/
+    .btn-block-custom {
+        display: block;
+        width: 100%;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .btn-info {
+        color: #fff;
+        background-color: #27abde;
+        border-color: #fff;
+    }
+
+    .spinner{
+        text-align: center;
+    }
+
+    #message-send-container{
+        display:none;
+    }
+
+    #player-welcome-container {
+        display: none;
+    }
+
+    #admin-container {
+        display: none;
+    }
+
+    a {
+        color: #337ab7;
+        text-decoration: none;
+    }
+
+    /* Make sure that padding behaves as expected */
+    * {
+        box-sizing: border-box
+    }
+
+    /* Container for skill bars */
+    .container-skill-bar {
+        width: 100%; /* Full width */
+        background-color: #ddd; /* Grey background */
+        margin-bottom: 10px;
+    }
+
+    .skills {
+        text-align: right; /* Right-align text */
+        padding: 5px; /* Add some padding */
+        color: white; /* White text color */
+    }
+
+    .answer-bar-a {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Green */
+    .answer-bar-b {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Blue */
+    .answer-bar-c {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Red */
+    .answer-bar-d {
+        width: 100%;
+        background-color: #808080;
+    }
+    /* Dark Grey */
+
+    .fullscreen-image {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
+
+    *:focus {
+        outline: 0 !important;
+    }
+
+    .oval-thought-border {
+        position: relative;
+        padding: 70px 30px;
+        margin: 1em auto 80px;
+        border: 10px solid #000000;
+        text-align: center;
+        color: #333;
+        background: #fff;
+        -webkit-border-top-left-radius: 240px 140px;
+        -webkit-border-top-right-radius: 240px 140px;
+        -webkit-border-bottom-right-radius: 240px 140px;
+        -webkit-border-bottom-left-radius: 240px 140px;
+        -moz-border-radius: 240px / 140px;
+        border-radius: 240px / 140px;
+    }
+
+        .bubble:before {
+            content: "";
+            position: absolute;
+            z-index: 10;
+            bottom: -40px;
+            right: 100px;
+            width: 50px;
+            height: 50px;
+            border: 6px solid #000000;
+            background: #fff;
+            -webkit-border-radius: 50px;
+            -moz-border-radius: 50px;
+            border-radius: 50px;
+            display: block;
+        }
+
+        .bubble:after {
+            content: "";
+            position: absolute;
+            z-index: 10;
+            bottom: -60px;
+            right: 50px;
+            width: 25px;
+            height: 25px;
+            border: 6px solid #000000;
+            background: #fff;
+            -webkit-border-radius: 25px;
+            -moz-border-radius: 25px;
+            border-radius: 25px;
+            display: block;
+        }
+
+    blockquote {
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 40px;
+        margin-inline-end: 40px;
+    }
+
+</style>
+
+
+<script> 
+
+    $(document).ready(function () {
+        getVotes();
+    });
+    
+    function getVotes() {
+        
+        $.ajax({
+            url: 'http://seriousgameacademyui.azurewebsites.net/api/VoteGameService/GetTopVotes',
+            type: 'GET',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: null,
+            success: function (data, textStatus, xhr) {
+                console.log(data);
+                setVoteGameDetails(data.Votes);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+            }
+        });
+
+    }
+
+    function showBestIdea(index) {
+        $('#score-container-start').hide();
+        $('#score-container-3').hide();
+        $('#score-container-2').hide();
+        $('#score-container-1').hide();
+
+        if (index == 2) {
+            $('#admin-status-message').html('<h2><span style="font-size: 1.4em;">' + orderedVotes[index].Name + '</span>, echt een goed idee! Dit moeten we verder uitwerken...</h2>');
+            $('#score-container-3').show();
+            $('.score-description').html(orderedVotes[index].Description);
+            $('.score-points').html(orderedVotes[index].Points);
+        }
+        if (index == 1) {
+            $('#admin-status-message').html('<h2><span style="font-size: 1.4em;">' + orderedVotes[index].Name + '</span>, gefeliciteerd! Veel stemmers zijn het met je eens.</h2>');
+            $('#score-container-2').show();
+            $('.score-description').html(orderedVotes[index].Description);
+            $('.score-points').html(orderedVotes[index].Points);
+        }
+        if (index == 0) {
+            $('#admin-status-message').html('<h2>De winnaar met de meeste stemmen is: <span style="font-size: 1.6em;">' + orderedVotes[index].Name + '</span></h2>');
+            $('#score-container-1').show();
+            $('.score-description').html(orderedVotes[index].Description);
+            $('.score-points').html(orderedVotes[index].Points);
+        }
+    }
+
+    var indexVoteToShow = 3;
+    var orderedVotes;
+    function setVoteGameDetails(votes) {
+        orderedVotes = votes;
+        $('#score-container-start').show();
+        $('#score-container-3').hide();
+        $('#score-container-2').hide();
+        $('#score-container-1').hide();
+        indexVoteToShow = 3;
+        $('#admin-status-message').html("");
+    }
+    
+    var elem = document.documentElement;
+    function openFullscreen() {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) { /* Firefox */
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE/Edge */
+            elem.msRequestFullscreen();
+        }
+
+        $('#fullscreen-container-open').hide();
+        $('#fullscreen-container-close').show();
+    }
+
+    function closeFullscreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+
+        $('#fullscreen-container-open').show();
+        $('#fullscreen-container-close').hide();
+    }
+</script>
+<body>
+    <div id="score-container-start" class="row" align-items-start style="display: none;">
+        <div class="col-sm-4 text-center">
+            <div class="row" style="margin-top:80px">
+                <div class="col-sm-12">
+                    <div id="admin-puppet-container" class="text-center" style="margin-bottom:25px">
+                        <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class="" />
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="text-center">
+                        <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/podium.png" style="width: 300px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="row" style="margin-top:80px">
+                <div class="col-sm-12 text-center">
+                    <h1>Wie heeft de meeste stemmen gekregen?</h1>
+                </div>
+                <div class="col-sm-12 text-center" style="margin-top:30px;">
+                    <svg style="width:350px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 48 48" version="1.1">
+                        <g id="surface1">
+                            <path style=" fill:#CFD8DC;" d="M 44 42 L 4 42 L 7 27 L 41 27 Z "></path>
+                            <path style=" fill:#455A64;" d="M 36 36 L 12 36 C 10.898438 36 10 35.101563 10 34 C 10 32.898438 10.898438 32 12 32 L 36 32 C 37.101563 32 38 32.898438 38 34 C 38 35.101563 37.101563 36 36 36 Z "></path>
+                            <path style=" fill:#FFA726;" d="M 23 6 L 30.757813 15.050781 C 31 15.535156 31 16.269531 31 17 L 27.316406 25.195313 C 27.074219 26.414063 26.222656 27.511719 25 28 C 24.292969 28.265625 25.140625 27.34375 23.054688 28 C 23.082031 26.328125 22.460938 24.644531 21.183594 23.371094 C 20.960938 23.144531 20.722656 22.949219 20.476563 22.769531 L 23.683594 21.71875 L 23.4375 17 L 18 13 C 18 13 10 22 9 6 Z "></path>
+                            <path style=" fill:#64B5F6;" d="M 15 17 L 33 17 L 33 35 L 15 35 Z "></path>
+                            <path style=" fill:#FFA726;" d="M 22.21875 27.78125 C 20.863281 28.878906 19.113281 28.363281 18.074219 27.222656 L 10 18 C 9.480469 17.429688 9 14.707031 9 14.085938 C 9 11.085938 9 6 9 6 L 19 13 L 19 18 L 22.382813 23.039063 C 23.800781 24.878906 23.582031 26.644531 22.21875 27.78125 "></path>
+                            <path style=" fill:#FFCDD2;" d="M 19.125 26.699219 C 19.839844 27.398438 20.980469 27.390625 21.683594 26.679688 C 22.382813 25.964844 22.371094 24.820313 21.660156 24.117188 C 20.945313 23.417969 18.410156 26 19.125 26.699219 "></path>
+                            <path style=" fill:#1E88E5;" d="M 15 34 L 33 34 L 33 36 L 15 36 Z "></path>
+                            <path style=" fill:#D68022;" d="M 23.4375 17 L 19 13.734375 L 19 17 Z "></path>
+                        </g>
+                    </svg>
+                </div>
+                <div class="col-sm-12 text-center" style="margin-top:15px;">
+                    <button type="button" name="button" class="vote-btn btn btn-info btn-lg" onclick="showBestIdea(2);">Show the best ideas of today!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="score-container-3" class="row" align-items-start style="display: none;">
+        <div class="col-sm-4 text-center">
+            <div class="row" style="margin-top:80px">
+                <div class="col-sm-12">
+                    <div id="admin-puppet-container" class="text-center" style="margin-bottom:25px">
+                        <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class="" />
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="text-center">
+                        <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/podium.png" style="width: 300px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="row" style="margin-top:80px">
+                <div class="col-sm-12 text-center">
+                    <h1>3e beste idee</h1>
+                    <h2>Met een totaal van <span class="score-points" style="font-size: 1.5em"></span> punten</h2>
+                </div>
+                <div class="col-sm-12 offset-sm-2 text-center">
+                    <div class="bubble" style="width: 550px; height: 100%; margin-top:30px;">
+                        <h2 class="score-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed nisl non libero ultricies ultrices eget id odio. In lobortis turpis duis.</h2>
+                    </div>
+                </div>
+                <div class="col-sm-12 text-center" style="margin-top:100px;">
+                    <button type="button" name="button" class="vote-btn btn btn-info btn-lg" onclick="showBestIdea(1);">Maak de nummer 2 bekend!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="score-container-2" class="row" align-items-start style="display: none;">
+        <div class="col-sm-4 text-center">
+            <div class="row" style="margin-top:80px">
+                <div class="col-sm-12">
+                    <div id="admin-puppet-container" class="text-center" style="margin-bottom:25px">
+                        <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class="" />
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="text-center">
+                        <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/podium.png" style="width: 300px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="row" style="margin-top:80px">
+                <div class="col-sm-12 text-center">
+                    <h1>2e beste idee</h1>
+                    <h2>Met een totaal van <span class="score-points" style="font-size: 1.5em"></span> punten</h2>
+                </div>
+                <div class="col-sm-12 offset-sm-2 text-center">
+                    <div class="bubble" style="width: 550px; height: 100%; margin-top:30px;">
+                        <h2 class="score-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed nisl non libero ultricies ultrices eget id odio. In lobortis turpis duis.</h2>
+                    </div>
+                </div>
+                <div class="col-sm-12 text-center" style="margin-top:100px;">
+                    <button type="button" name="button" class="vote-btn btn btn-info btn-lg" onclick="showBestIdea(0);">Toon de winnaar!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="score-container-1" class="row" align-items-start style="display: none;">
+        <div class="col-sm-4 text-center">
+            <div class="row" style="margin-top:80px">
+                <div class="col-sm-12">
+                    <div id="admin-puppet-container" class="text-center" style="margin-bottom:25px">
+                        <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class="" />
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="text-center">
+                        <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/podium.png" style="width: 300px;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="row" style="margin-top:80px">
+                <div class="col-sm-12 text-center">
+                    <h1 style="font-size: 3.5em;">Het beste idee van vandaag!</h1>
+                    <h2>Met een totaal van <span class="score-points" style="font-size: 1.5em"></span> punten</h2>
+                </div>
+                <div class="col-sm-12 offset-sm-2 text-center">
+                    <div class="bubble" style="width: 550px; height: 100%; margin-top:30px;">
+                        <h2 class="score-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed nisl non libero ultricies ultrices eget id odio. In lobortis turpis duis.</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer" style="height: 150px;">
+        <div class="col-sm-12">
+            <div id="admin-status-message" class="text-center" style="padding-top: 50px;">
+
+            </div>
+        </div>
+    </div>
+    <div id="fullscreen-container-open" class="fullscreen-image">
+        <a href="javascript:void(0);" onclick="openFullscreen();">
+            <svg style="width: 40px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" version="1.1">
+                <g id="surface1">
+                    <path style=" " d="M 4 4 L 4 13 L 6 13 L 6 7.4375 L 11.28125 12.71875 L 12.71875 11.28125 L 7.4375 6 L 13 6 L 13 4 Z M 19 4 L 19 6 L 24.5625 6 L 19.28125 11.28125 L 20.71875 12.71875 L 26 7.4375 L 26 13 L 28 13 L 28 4 Z M 4 19 L 4 28 L 13 28 L 13 26 L 7.4375 26 L 12.71875 20.71875 L 11.28125 19.28125 L 6 24.5625 L 6 19 Z M 26 19 L 26 24.5625 L 20.71875 19.28125 L 19.28125 20.71875 L 24.5625 26 L 19 26 L 19 28 L 28 28 L 28 19 Z "></path>
+                </g>
+            </svg>
+        </a>
+    </div>
+    <div id="fullscreen-container-close" class="fullscreen-image" style="display: none;">
+        <a href="javascript:void(0);" onclick="closeFullscreen();">
+            <svg style="width: 40px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" version="1.1">
+                <g id="surface1">
+                    <path style=" " d="M 28.28125 2.28125 L 19 11.59375 L 19 3 L 17 3 L 17 15 L 29 15 L 29 13 L 20.40625 13 L 29.71875 3.71875 Z M 3 17 L 3 19 L 11.59375 19 L 2.28125 28.28125 L 3.71875 29.71875 L 13 20.40625 L 13 29 L 15 29 L 15 17 Z "></path>
+                </g>
+            </svg>
+        </a>
+    </div>
+</body>
+</html>

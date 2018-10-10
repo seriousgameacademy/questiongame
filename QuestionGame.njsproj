@@ -32,6 +32,7 @@
     <Compile Include="server.js" />
     <Content Include="static\bootstrap.css" />
     <Content Include="images\sga_puppet_supermen.png" />
+    <Content Include="score.html" />
     <Content Include="vote.html" />
     <Content Include="index.html" />
     <Content Include="Web.config" />
