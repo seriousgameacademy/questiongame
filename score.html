@@ -13,7 +13,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
+
     <script type="text/javascript">
         var devicewidth = window.screen.width;
         var deviceheight = window.screen.height;
@@ -32,7 +32,6 @@
 <style>
     body {
         font-family: 'Roboto', sans-serif !important;
-        
         -webkit-text-size-adjust: none;
         color: #FFFFFF;
         background-color: #27abde !important;
@@ -116,7 +115,7 @@
         font-size: 0.9em;
     }
 
-        /*.bubble:after {
+    /*.bubble:after {
             content: '';
             position: absolute;
             border-style: solid;
@@ -154,12 +153,12 @@
         border-color: #fff;
     }
 
-    .spinner{
+    .spinner {
         text-align: center;
     }
 
-    #message-send-container{
-        display:none;
+    #message-send-container {
+        display: none;
     }
 
     #player-welcome-container {
@@ -242,37 +241,37 @@
         border-radius: 240px / 140px;
     }
 
-        .bubble:before {
-            content: "";
-            position: absolute;
-            z-index: 10;
-            bottom: -40px;
-            right: 100px;
-            width: 50px;
-            height: 50px;
-            border: 6px solid #000000;
-            background: #fff;
-            -webkit-border-radius: 50px;
-            -moz-border-radius: 50px;
-            border-radius: 50px;
-            display: block;
-        }
+    .bubble:before {
+        content: "";
+        position: absolute;
+        z-index: 10;
+        bottom: -40px;
+        right: 100px;
+        width: 50px;
+        height: 50px;
+        border: 6px solid #000000;
+        background: #fff;
+        -webkit-border-radius: 50px;
+        -moz-border-radius: 50px;
+        border-radius: 50px;
+        display: block;
+    }
 
-        .bubble:after {
-            content: "";
-            position: absolute;
-            z-index: 10;
-            bottom: -60px;
-            right: 50px;
-            width: 25px;
-            height: 25px;
-            border: 6px solid #000000;
-            background: #fff;
-            -webkit-border-radius: 25px;
-            -moz-border-radius: 25px;
-            border-radius: 25px;
-            display: block;
-        }
+    .bubble:after {
+        content: "";
+        position: absolute;
+        z-index: 10;
+        bottom: -60px;
+        right: 50px;
+        width: 25px;
+        height: 25px;
+        border: 6px solid #000000;
+        background: #fff;
+        -webkit-border-radius: 25px;
+        -moz-border-radius: 25px;
+        border-radius: 25px;
+        display: block;
+    }
 
     blockquote {
         display: block;
@@ -281,18 +280,17 @@
         margin-inline-start: 40px;
         margin-inline-end: 40px;
     }
-
 </style>
 
 
-<script> 
+<script>
 
     $(document).ready(function () {
         getVotes();
     });
-    
+
     function getVotes() {
-        
+
         $.ajax({
             url: 'http://seriousgameacademyui.azurewebsites.net/api/VoteGameService/GetTopVotes',
             type: 'GET',
@@ -333,6 +331,20 @@
             $('#score-container-1').show();
             $('.score-description').html(orderedVotes[index].Description);
             $('.score-points').html(orderedVotes[index].Points);
+            $('#confetticanvas').show();
+
+            var timerConfetti = 15;
+
+            var myVar3 = setInterval(function () {
+
+                timerConfetti = timerConfetti - 1;
+
+
+                if (timerConfetti == 0) {
+                    clearInterval(myVar3);
+                    $('#confetticanvas').hide();
+                }
+            }, 1000);
         }
     }
 
@@ -346,8 +358,10 @@
         $('#score-container-1').hide();
         indexVoteToShow = 3;
         $('#admin-status-message').html("");
+
+
     }
-    
+
     var elem = document.documentElement;
     function openFullscreen() {
         if (elem.requestFullscreen) {
@@ -538,5 +552,130 @@
             </svg>
         </a>
     </div>
+
+    <div id="confetticanvas" style="position:absolute; top:0px; left:0px; z-index:1; display:none;">
+        <canvas id="world" style="z-index: 9999;"></canvas>
+    </div>
 </body>
 </html>
+
+<script>
+    (function () {
+        var COLORS, Confetti, NUM_CONFETTI, PI_2, canvas, confetti, context, drawCircle, i, range, resizeWindow, xpos;
+
+        NUM_CONFETTI = 350;
+
+        COLORS = [[85, 71, 106], [174, 61, 99], [219, 56, 83], [244, 92, 68], [248, 182, 70]];
+
+        PI_2 = 2 * Math.PI;
+
+        canvas = document.getElementById("world");
+
+        context = canvas.getContext("2d");
+
+        window.w = 0;
+
+        window.h = 0;
+
+        resizeWindow = function () {
+            window.w = canvas.width = window.innerWidth;
+            return window.h = canvas.height = window.innerHeight;
+        };
+
+        window.addEventListener('resize', resizeWindow, false);
+
+        window.onload = function () {
+            return setTimeout(resizeWindow, 0);
+        };
+
+        range = function (a, b) {
+            return (b - a) * Math.random() + a;
+        };
+
+        drawCircle = function (x, y, r, style) {
+            context.beginPath();
+            context.arc(x, y, r, 0, PI_2, false);
+            context.fillStyle = style;
+            return context.fill();
+        };
+
+        xpos = 0.5;
+
+        document.onmousemove = function (e) {
+            return xpos = e.pageX / w;
+        };
+
+        window.requestAnimationFrame = (function () {
+            return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
+                return window.setTimeout(callback, 1000 / 60);
+            };
+        })();
+
+        Confetti = (function () {
+            function Confetti() {
+                this.style = COLORS[~~range(0, 5)];
+                this.rgb = "rgba(" + this.style[0] + "," + this.style[1] + "," + this.style[2];
+                this.r = ~~range(2, 6);
+                this.r2 = 2 * this.r;
+                this.replace();
+            }
+
+            Confetti.prototype.replace = function () {
+                this.opacity = 0;
+                this.dop = 0.03 * range(1, 4);
+                this.x = range(-this.r2, w - this.r2);
+                this.y = range(-20, h - this.r2);
+                this.xmax = w - this.r;
+                this.ymax = h - this.r;
+                this.vx = range(0, 2) + 8 * xpos - 5;
+                return this.vy = 0.7 * this.r + range(-1, 1);
+            };
+
+            Confetti.prototype.draw = function () {
+                var ref;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.opacity += this.dop;
+                if (this.opacity > 1) {
+                    this.opacity = 1;
+                    this.dop *= -1;
+                }
+                if (this.opacity < 0 || this.y > this.ymax) {
+                    this.replace();
+                }
+                if (!((0 < (ref = this.x) && ref < this.xmax))) {
+                    this.x = (this.x + this.xmax) % this.xmax;
+                }
+                return drawCircle(~~this.x, ~~this.y, this.r, this.rgb + "," + this.opacity + ")");
+            };
+
+            return Confetti;
+
+        })();
+
+        confetti = (function () {
+            var j, ref, results;
+            results = [];
+            for (i = j = 1, ref = NUM_CONFETTI; 1 <= ref ? j <= ref : j >= ref; i = 1 <= ref ? ++j : --j) {
+                results.push(new Confetti);
+            }
+            return results;
+        })();
+
+        window.step = function () {
+            var c, j, len, results;
+            requestAnimationFrame(step);
+            context.clearRect(0, 0, w, h);
+            results = [];
+            for (j = 0, len = confetti.length; j < len; j++) {
+                c = confetti[j];
+                results.push(c.draw());
+            }
+            return results;
+        };
+
+        step();
+
+    }).call(this);
+
+</script>
