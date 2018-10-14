@@ -30,6 +30,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="server.js" />
+    <Content Include="admin.html" />
     <Content Include="static\bootstrap.css" />
     <Content Include="images\sga_puppet_supermen.png" />
     <Content Include="score.html" />

@@ -29,6 +29,13 @@ var server = require('http').createServer(function (req, res) {
             res.end();
         });
     }
+    else if (req.url == '/admin') {
+        fs.readFile('admin.html', function (err, data) {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.write(data);
+            res.end();
+        });
+    }
     else {
         fs.readFile('index.html', function (err, data) {
             res.writeHead(200, { 'Content-Type': 'text/html' });
