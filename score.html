@@ -313,20 +313,20 @@
         $('#score-container-3').hide();
         $('#score-container-2').hide();
         $('#score-container-1').hide();
-
-        if (index == 2) {
+        indexVoteToShow = indexVoteToShow - 1;
+        if (indexVoteToShow == 2) {
             $('#admin-status-message').html('<h2><span style="font-size: 1.4em;">' + orderedVotes[index].Name + '</span>, echt een goed idee! Dit moeten we verder uitwerken...</h2>');
             $('#score-container-3').show();
             $('.score-description').html(orderedVotes[index].Description);
             $('.score-points').html(orderedVotes[index].Points);
         }
-        if (index == 1) {
+        if (indexVoteToShow == 1) {
             $('#admin-status-message').html('<h2><span style="font-size: 1.4em;">' + orderedVotes[index].Name + '</span>, gefeliciteerd! Veel stemmers zijn het met je eens.</h2>');
             $('#score-container-2').show();
             $('.score-description').html(orderedVotes[index].Description);
             $('.score-points').html(orderedVotes[index].Points);
         }
-        if (index == 0) {
+        if (indexVoteToShow == 0) {
             $('#admin-status-message').html('<h2>De winnaar met de meeste stemmen is: <span style="font-size: 1.6em;">' + orderedVotes[index].Name + '</span></h2>');
             $('#score-container-1').show();
             $('.score-description').html(orderedVotes[index].Description);
