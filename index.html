@@ -695,14 +695,14 @@
 
     var elem = document.documentElement;
     function openFullscreen() {
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.mozRequestFullScreen) { /* Firefox */
-            elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { /* IE/Edge */
-            elem.msRequestFullscreen();
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen(); // Firefox
+        } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen(); // Chrome and Safari
+        } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen(); // IE
         }
 
         $('#fullscreen-container-open').hide();
@@ -712,12 +712,12 @@
     function closeFullscreen() {
         if (document.exitFullscreen) {
             document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
         } else if (document.mozCancelFullScreen) {
             document.mozCancelFullScreen();
         } else if (document.webkitExitFullscreen) {
             document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
         }
 
         $('#fullscreen-container-open').show();
