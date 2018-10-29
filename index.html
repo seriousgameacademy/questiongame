@@ -693,32 +693,41 @@
         }
     })
 
-    var elem = document.documentElement;
-    function openFullscreen() {
-        if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) {
-            document.documentElement.mozRequestFullScreen(); // Firefox
-        } else if (document.documentElement.webkitRequestFullscreen) {
-            document.documentElement.webkitRequestFullscreen(); // Chrome and Safari
-        } else if (document.documentElement.msRequestFullscreen) {
-            document.documentElement.msRequestFullscreen(); // IE
+    var elem = document.body;
+    
+    function toggleFullScreen() {
+        // ## The below if statement seems to work better ## if ((document.fullScreenElement && document.fullScreenElement !== null) || (document.msfullscreenElement && document.msfullscreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+        if ((document.fullScreenElement !== undefined && document.fullScreenElement === null) || (document.msFullscreenElement !== undefined && document.msFullscreenElement === null) || (document.mozFullScreen !== undefined && !document.mozFullScreen) || (document.webkitIsFullScreen !== undefined && !document.webkitIsFullScreen)) {
+            if (elem.requestFullScreen) {
+                elem.requestFullScreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullScreen) {
+                elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        } else {
+            if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
         }
+    }
+    function openFullscreen() {
+        toggleFullScreen();
 
         $('#fullscreen-container-open').hide();
         $('#fullscreen-container-close').show();
     }
 
     function closeFullscreen() {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.msExitFullscreen) {
-            document.msExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-            document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        }
+        toggleFullScreen();
 
         $('#fullscreen-container-open').show();
         $('#fullscreen-container-close').hide();
