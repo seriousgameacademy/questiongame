@@ -369,6 +369,7 @@
             if (data.type == 'open') {
                 $('#admin-question-container-open').show();
                 $('#openquestionarea').focus();
+                $('#timer-container').show();
             }
         }
         if (data.state == 'answer' && mode == 'admin') {
@@ -527,9 +528,9 @@
         if (mode == 'admin' && gamestate == 'question') {
             $('.question-question').html(data.question.question);
             
-            
             if (data.question.type == 'multiple') {
                 timerAdmin = 25;
+
                 $('#timer-seconds').html(timerAdmin);
                 var myVar = setInterval(function () {
 
@@ -550,7 +551,20 @@
             }
 
             if (data.question.type == 'open') {
+                timerAdmin = 180;
 
+                $('#timer-seconds').html(timerAdmin);
+                var myVar = setInterval(function () {
+
+                    timerAdmin = timerAdmin - 1;
+                    // Get todays date and time
+                    $('#timer-seconds').html(timerAdmin);
+
+                    if (timerAdmin == 0) {
+                        setOpenAnswer();
+                        clearInterval(myVar);
+                    }
+                }, 1000);
             }
         }
 
@@ -826,9 +840,6 @@
                     </div>
                 </form>
                 <div id="error-container-answer-open"></div>
-            </div>
-            <div class="col-sm-12 text-center">
-                <button type="button" name="button" class="btn btn-info btn-lg btn-block" onclick="setOpenAnswer()">Verstuur</button>
             </div>
         </div>
     </div>
