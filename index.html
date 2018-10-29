@@ -530,7 +530,7 @@
     socket.on('newquestion', function (data) {
         console.log(data);
 
-        var inner = $('.footer-multiple').innerHtml();
+        var inner = $('.footer-multiple').innerHtml;
         $('.footer-multiple').html(inner);
 
         if (mode == 'admin' && gamestate == 'question') {
