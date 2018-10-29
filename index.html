@@ -561,7 +561,7 @@
                     $('#timer-seconds').html(timerAdmin);
 
                     if (timerAdmin == 0) {
-                        setOpenAnswer();
+                        getQuestion();
                         clearInterval(myVar);
                     }
                 }, 1000);
@@ -841,6 +841,9 @@
                 </form>
                 <div id="error-container-answer-open"></div>
             </div>
+            <div class="col-sm-12 text-center">
+                <button type="button" name="button" class="btn btn-info btn-lg btn-block" onclick="setOpenAnswer()">Verstuur</button>
+            </div>
         </div>
     </div>
     <div id="player-question-ok-container" style="display: none;" class="overlay-ok">
@@ -1056,11 +1059,6 @@
             </div>
             <div class="col-sm-12">
                 &nbsp;
-            </div>
-            <div class="col-sm-12">
-                <div class="text-center">
-                    <button type="button" name="button" class="btn btn-info btn-lg" onclick="getQuestion()">Toon resultaten</button>
-                </div>
             </div>
         </div>
         <div id="admin-result-question-container" class="row" style="display:none; margin-top: 80px;" align-items-start>
