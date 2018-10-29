@@ -529,6 +529,10 @@
 
     socket.on('newquestion', function (data) {
         console.log(data);
+
+        var inner = $('.footer-multiple').innerHtml();
+        $('.footer-multiple').html(inner);
+
         if (mode == 'admin' && gamestate == 'question') {
             $('.question-question').html(data.question.question);
             
@@ -547,6 +551,7 @@
                         clearInterval(myVar);
                     }
                 }, 1000);
+
 
                 $('.answer-a').html(data.question.A);
                 $('.answer-b').html(data.question.B);
@@ -817,7 +822,7 @@
                 <h2>Welk antwoord is goed?</h2>
             </div>
         </div>
-        <div class="footer">
+        <div class="footer footer-multi">
             <div class="row row-centered"></div>
             <div class="col-sm-12 text-center">
                 <button type="button" name="button" class="vote-btn btn btn-info btn-block-custom-footer" onclick="setAnswer('A');">Antwoord A</button>
