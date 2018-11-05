@@ -323,7 +323,7 @@ io.on('connection', function (socket) {
         var questions = [];
         var question1 = { question: "Wat zouden waarden voor Flevoland (SWiF) kunnen zijn?", type: 'multiple', A: "Creatief - Inspiratie - Ontdekken - Samenzijn", B: "Doelgericht - Effici&euml;nt - Kennis - Meesterschap", C: "Dienstbaar - Duurzaam - Pionieren - Veelzijdig", D: "Eenvoudigheid - Enthousiasme - Leraarschap - Waardering", Correct: "C" }
         var question2 = { question: "Wat zou een goede formulering zijn van de essentie van werken in Flevoland (SWiF)?", type: 'multiple', A: "Tot rust komen", B: "Economisch wonen en werken", C: "Duurzaam groeien", D: "Zinvol pionieren", Correct: "D" }
-        var question3 = { question: "Wat zou een onderscheidend en aantrekkelijk aanbod zijn voor iemand om te werken voor de provincie Flevoland?", type: 'multiple', A: "Carri&egrave;re maken", B: "Zinvol werk met veel variatie", C: "Snel geld verdienen", D: "Internationale werkomgeving", Correct: "B" }
+        var question3 = { question: "Wat zou een onderscheidend en aantrekkelijk aanbod zijn voor iemand om te werken voor de provincie Flevoland?", type: 'multiple', A: "Carri&egrave;re maken", B: "Carri&egrave;re mogelijkheden & arbeidsvoorwaarden - Uitdagend en vari&euml;rend werk - Verschil maken/zingeving", C: "Snel geld verdienen", D: "Internationale werkomgeving", Correct: "B" }
         var question4 = { question: "Formuleer in 1 korte en krachtige zin wat je toekomstige werknemers kan beloven als ze komen werken voor de provincie Flevoland?", type: 'open'}
         questions.push(question1);
         questions.push(question2);
