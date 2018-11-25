@@ -290,7 +290,29 @@
 
 <script>
 
-   
+    $(document).ready(function () {
+        getVotes();
+    });
+
+    function getVotes() {
+
+        $.ajax({
+            url: 'http://seriousgameacademyui.azurewebsites.net/api/VoteGameService/GetVotes',
+            type: 'GET',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: null,
+            success: function (data, textStatus, xhr) {
+                console.log(data);
+                setVoteDetails(data.Votes);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+            }
+        });
+
+    }
+
     function resetVotes() {
 
         $.ajax({
