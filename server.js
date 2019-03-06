@@ -321,14 +321,45 @@ io.on('connection', function (socket) {
 
     function getQuestions() {
         var questions = [];
-        var question1 = { question: "Wat zouden waarden voor Flevoland (SWiF) kunnen zijn?", type: 'multiple', A: "Creatief - Inspiratie - Ontdekken - Samenzijn", B: "Doelgericht - Effici&euml;nt - Kennis - Meesterschap", C: "Dienstbaar - Duurzaam - Pionieren - Veelzijdig", D: "Eenvoudigheid - Enthousiasme - Leraarschap - Waardering", Correct: "C" }
-        var question2 = { question: "Wat zou een goede formulering zijn van de essentie van werken in Flevoland (SWiF)?", type: 'multiple', A: "Tot rust komen", B: "Economisch wonen en werken", C: "Duurzaam groeien", D: "Zinvol pionieren", Correct: "D" }
-        var question3 = { question: "Wat zou een onderscheidend en aantrekkelijk aanbod zijn voor iemand om te werken voor de provincie Flevoland?", type: 'multiple', A: "Carri&egrave;re maken", B: "Carri&egrave;re mogelijkheden & arbeidsvoorwaarden - Uitdagend en vari&euml;rend werk - Verschil maken/zingeving", C: "Snel geld verdienen", D: "Internationale werkomgeving", Correct: "B" }
-        var question4 = { question: "Formuleer in 1 korte en krachtige zin wat je toekomstige werknemers kan beloven als ze komen werken in Flevoland?", type: 'open'}
+        var question1 = { question: "Hoeveel kerstbomen hebben we verhuurd/verkocht afgelopen seizoen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question2 = { question: "Hoeveel meter guirlande (incl. huurkerstdeco) hebben we opgehangen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question3 = { question: "Hoeveel meter led verlichting van Avontuur hangt er in de koopgoot?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question4 = { question: "Wat is onze grootste klant (qua omzet)?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question5 = { question: "Wie zat er tijdens de opbouw van Rosada in de kinderdraaimolen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question6 = { question: "Wat is het Stopwoord van Piet Verdonschot?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question7 = { question: "Wie lacht het hardst om zijn eigen grappen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question8 = { question: "Wie heeft het afgelopen jaar de meeste boetes gehad?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question9 = { question: "Hoeveel tie-wraps zijn er ingekocht?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question10 = { question: "Hoeveel storingen waren er afgelopen seizoen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question11 = { question: "Welke onderaannemer bouwt de meeste projecten op?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question12 = { question: "Hoeveel dagen heeft de verlichting in de Haarlemmerbuurt niet op de juiste kleur gestaan?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question13 = { question: "Hoeveel NS stations hebben we in 2018 versiert?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question14 = { question: "Hoeveel dagen zitten we in Venhuizen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question15 = { question: "Hoeveel klanten hebben wij afgelopen beleverd?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question16 = { question: "Hoeveel catalogus items hebben we?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question17 = { question: "Hoeveel containers heeft Guirlando naar NL gehaald?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question18 = { question: "Wat is het aantal vierkante meter opslag van Edwin?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question18 = { question: "Hoeveel visuals heeft Marianus gemaakt?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question19 = { question: "Hoeveel facturen heeft Anne afgelopen seizoen ingeboekt?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
         questions.push(question1);
-        questions.push(question2);
+        questions.push(question2;
         questions.push(question3);
         questions.push(question4);
+        questions.push(question5);
+        questions.push(question6);
+        questions.push(question7);
+        questions.push(question8);
+        questions.push(question9);
+        questions.push(question10);
+        questions.push(question11);
+        questions.push(question12);
+        questions.push(question13);
+        questions.push(question14);
+        questions.push(question15);
+        questions.push(question16);
+        questions.push(question17);
+        questions.push(question18);
+        questions.push(question19);
 
         return questions;
     }
