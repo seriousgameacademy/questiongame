@@ -342,7 +342,7 @@ io.on('connection', function (socket) {
         var question18 = { question: "Hoeveel visuals heeft Marianus gemaakt?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
         var question19 = { question: "Hoeveel facturen heeft Anne afgelopen seizoen ingeboekt?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
         questions.push(question1);
-        questions.push(question2;
+        questions.push(question2);
         questions.push(question3);
         questions.push(question4);
         questions.push(question5);
