@@ -53,6 +53,7 @@
 
     .jumbotron {
     background-color: #fff;
+    color: #000000;
     padding: 19px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -399,6 +400,7 @@
         if (data.state == 'question' && mode == 'admin') {
             $("#admin-container").show();
             $('#admin-header-container').show();
+            $('#bodypage').addClass("background");
 
             if (data.type == 'multiple') {
                 $('#admin-question-container-multi').show();
@@ -1075,7 +1077,7 @@
                 </div>
             </div>
         </div>
-        <div id="admin-question-container-multi" class="row" style="display:none;" align-items-start>
+        <div id="admin-question-container-multi" class="row jumbotron" style="display:none;" align-items-start>
             <div class="col-sm-12">
                 <h1>Vraag <span class="question-number"></span>: <span class="question-question"></span></h1>
             </div>
