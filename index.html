@@ -40,6 +40,27 @@
         /*height: 100%;*/
     }
 
+    .background{
+            background-image: url("https://novanetprdstorage.blob.core.windows.net:443/questiongame/game-background-001.jpg");
+                /* Full height */
+    height: 100%; 
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
+
+    .jumbotron {
+    background-color: #fff;
+    padding: 19px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.01), 0 6px 15px 0 rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    border: 0;
+}
+
     @media(min-width: 1200px) {
         .container {
             max-width: 2000px !important;
@@ -302,6 +323,7 @@
 
         gamestate = data.state;
         // Hide all
+        $('#bodypage').removeClass("background");
         $('#admin-question-container-multi').hide();
         $('#admin-question-container-open').hide();
         $('#admin-result-question-container').hide();
@@ -371,6 +393,7 @@
             $("#admin-container").show();
             $('.admin-start-container').show();
             $('#admin-header-container').show();
+            $('#bodypage').addClass("background");
         }
         
         if (data.state == 'question' && mode == 'admin') {
@@ -749,8 +772,10 @@
     }
 </script>
 
-<body>
+<body id="bodypage" class="background">
+    
     <div id="login-container" class="container">
+          
         <div class="row justify-content-center align-self-center" style="margin-top:100px;">
             <div class="col-sm-4">
 
@@ -983,12 +1008,10 @@
         </div>
         <div id="admin-header-container" class="row justify-content-center align-self-center" style="margin-top:30px; display:none;">
             <div class="col-sm-4">
-
+                <h1>avontuur.seriousgameacademy.com</h1>
             </div>
             <div class="col-sm-4">
-                <div id="admin-puppet-container" class="text-center" style="margin-bottom:25px">
-                    <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/sga_puppet_supermen.png" width="150px" class="" />
-                </div>
+                    
             </div>
             <div class="col-sm-4">
                 <div class="row admin-start-container">
@@ -1039,14 +1062,12 @@
                     <h4><div id="message-container"></div></h4>
                 </div>
                 <div class="col-sm-12">
-                    <div class="text-center" style="margin: 25px;">
-                        <h1>avontuur.seriousgameacademy.com</h1>
-                    </div>
+                    
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-12 jumbotron">
                         <div class="text-center">
                             <img src="https://novanetprdstorage.blob.core.windows.net:443/questiongame/QRcode_questiongame.png" width="300px" />
                         </div>
