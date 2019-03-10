@@ -416,6 +416,7 @@
             $("#admin-container").show();
             $('#admin-result-question-container').show();
             $('#admin-header-container').hide();
+            $('#bodypage').addClass("background");
         }
         if (data.state == 'gameover' && mode == 'admin') {
             $("#admin-container").show();
@@ -1114,7 +1115,7 @@
                 &nbsp;
             </div>
         </div>
-        <div id="admin-result-question-container" class="row" style="display:none; margin-top: 80px;" align-items-start>
+        <div id="admin-result-question-container" class="row jumbotron" style="display:none; margin-top: 80px;" align-items-start>
             <div class="col-sm-12" style="margin-bottom:15px;">
                 <h2>Vraag <span class="question-number"></span>: <span class="question-question"></span></h2>
             </div>
