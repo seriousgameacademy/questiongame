@@ -321,7 +321,7 @@ io.on('connection', function (socket) {
 
     function getQuestions() {
         var questions = [];
-        var question1 = { question: "Hoeveel kerstbomen hebben we verhuurd/verkocht afgelopen seizoen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question1 = { question: "Hoeveel kerstbomen hebben we verhuurd/verkocht afgelopen seizoen?", type: "multiple", A: "B", B: "B", C: "C", D: "D", Correct: "A" }
         var question2 = { question: "Hoeveel meter guirlande (incl. huurkerstdeco) hebben we opgehangen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
         var question3 = { question: "Hoeveel meter led verlichting van Avontuur hangt er in de koopgoot?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
         var question4 = { question: "Wat is onze grootste klant (qua omzet)?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
