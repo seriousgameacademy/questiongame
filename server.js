@@ -321,32 +321,33 @@ io.on('connection', function (socket) {
 
     function getQuestions() {
         var questions = [];
-        var question1 = { question: "Hoeveel kerstbomen hebben we verhuurd/verkocht afgelopen seizoen?", type: "multiple", A: "B", B: "B", C: "C", D: "D", Correct: "A" }
-        var question2 = { question: "Hoeveel meter guirlande (incl. huurkerstdeco) hebben we opgehangen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question3 = { question: "Hoeveel meter led verlichting van Avontuur hangt er in de koopgoot?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question4 = { question: "Wat is onze grootste klant (qua omzet)?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question5 = { question: "Wie zat er tijdens de opbouw van Rosada in de kinderdraaimolen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question6 = { question: "Wat is het Stopwoord van Piet Verdonschot?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question7 = { question: "Wie lacht het hardst om zijn eigen grappen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question8 = { question: "Wie heeft het afgelopen jaar de meeste boetes gehad?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question9 = { question: "Hoeveel tie-wraps zijn er ingekocht?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question10 = { question: "Hoeveel storingen waren er afgelopen seizoen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question11 = { question: "Welke onderaannemer bouwt de meeste projecten op?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question12 = { question: "Hoeveel dagen heeft de verlichting in de Haarlemmerbuurt niet op de juiste kleur gestaan?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question13 = { question: "Hoeveel NS stations hebben we in 2018 versiert?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question14 = { question: "Hoeveel dagen zitten we in Venhuizen?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question15 = { question: "Hoeveel klanten hebben wij afgelopen beleverd?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question16 = { question: "Hoeveel catalogus items hebben we?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question17 = { question: "Hoeveel containers heeft Guirlando naar NL gehaald?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question18 = { question: "Wat is het aantal vierkante meter opslag van Edwin?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question18 = { question: "Hoeveel visuals heeft Marianus gemaakt?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
-        var question19 = { question: "Hoeveel facturen heeft Anne afgelopen seizoen ingeboekt?", type: "multiple", A: "A", B: "B", C: "C", D: "D", Correct: "A" }
+        var question1 = { question: "Hoeveel kerstbomen hebben we verhuurd/verkocht afgelopen seizoen?", type: "multiple", A: "2300", B: "389", C: "500", D: "1.763", Correct: "D" }
+        var question2 = { question: "Hoeveel meter guirlande (incl. huurkerstdeco) hebben we opgehangen?", type: "multiple", A: "12187", B: "40000", C: "750", D: "8967", Correct: "A" }
+        var question3 = { question: "Hoeveel meter led verlichting van Avontuur hangt er in de koopgoot?", type: "multiple", A: "750", B: "89912", C: "200000", D: "53000", Correct: "B" }
+        var question4 = { question: "Wat is onze grootste klant (qua omzet)?", type: "multiple", A: "Amsterdam Airport Schiphol", B: "Center Parcs", C: "De Bijenkorf", D: "Hudson’s Bay", Correct: "A" }
+        var question5 = { question: "Wie zat er tijdens de opbouw van Rosada in de kinderdraaimolen?", type: "multiple", A: "Bart de Waart", B: "Milton", C: "Ray", D: "Ruben", Correct: "B" }
+        var question6 = { question: "Wat is het Stopwoord van Mike Verdonschot?", type: "multiple", A: "Bloemkool", B: "Ja", C: "Nee", D: "Wat", Correct: "B" }
+        var question6b = { question: "Wat is het Stopwoord van Piet Verdonschot?", type: "multiple", A: "Snap je", B: "Euh", C: "Weet je niet", D: "Weet je wel", Correct: "D" }
+        var question7 = { question: "Wie lacht het hardst om zijn eigen grappen?", type: "multiple", A: "Antoine", B: "Edwin Visser", C: "Marcel", D: "Nordin", Correct: "A" }
+        var question8 = { question: "Wie heeft het afgelopen jaar de meeste boetes gehad?", type: "multiple", A: "Edwin van den Boogerd", B: "Gijs Ooms", C: "Mike Verdonschot", D: "Mike Westercappel", Correct: "A" }
+        var question9 = { question: "Hoeveel tie-wraps zijn er ingekocht?", type: "multiple", A: "5000", B: "70000", C: "1034000", D: "1500", Correct: "C" }
+        var question10 = { question: "Hoeveel storingen waren er afgelopen seizoen?", type: "multiple", A: "0", B: "10", C: "150", D: "254", Correct: "D" }
+        var question11 = { question: "Welke onderaannemer bouwt de meeste projecten op?", type: "multiple", A: "Ray of Led", B: "Flex and Famous", C: "Bart de Waardt", D: "Jeroen Kroeze", Correct: "B" }
+        var question12 = { question: "Hoeveel dagen heeft de verlichting in de Haarlemmerbuurt niet op de juiste kleur gestaan?", type: "multiple", A: "1", B: "5", C: "7", D: "13", Correct: "B" }
+        var question13 = { question: "Hoeveel NS stations hebben we in 2018 versiert?", type: "multiple", A: "1", B: "5", C: "7", D: "14", Correct: "D" }
+        var question14 = { question: "Hoeveel dagen zitten we in Venhuizen?", type: "multiple", A: "198", B: "241", C: "283", D: "301", Correct: "C" }
+        var question15 = { question: "Hoeveel klanten hebben wij afgelopen beleverd?", type: "multiple", A: "433", B: "337", C: "157", D: "89", Correct: "A" }
+        var question16 = { question: "Hoeveel catalogus items hebben we?", type: "multiple", A: "1100", B: "742", C: "501", D: "299", Correct: "B" }
+        var question17 = { question: "Hoeveel containers heeft Guirlando naar NL gehaald?", type: "multiple", A: "6", B: "8", C: "13", D: "20", Correct: "C" }
+        var question18 = { question: "Hoeveel visuals heeft Marianus gemaakt?", type: "multiple", A: "1432", B: "850", C: "439", D: "151", Correct: "A" }
+        var question19 = { question: "Hoeveel facturen heeft Anne afgelopen seizoen ingeboekt?", type: "multiple", A: "3912", B: "4656", C: "5231", D: "6604", Correct: "B" }
         questions.push(question1);
         questions.push(question2);
         questions.push(question3);
         questions.push(question4);
         questions.push(question5);
         questions.push(question6);
+        questions.push(question6b);
         questions.push(question7);
         questions.push(question8);
         questions.push(question9);
