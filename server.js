@@ -342,8 +342,8 @@ io.on('connection', function (socket) {
         var question18 = { question: "Hoeveel visuals heeft Marianus gemaakt?", type: "multiple", A: "1432", B: "850", C: "439", D: "151", Correct: "A" }
         var question19 = { question: "Hoeveel facturen heeft Anne afgelopen seizoen ingeboekt?", type: "multiple", A: "3.912", B: "4.656", C: "5.231", D: "6.604", Correct: "B" }
         questions.push(question1);
-        questions.push(question2);
-        questions.push(question3);
+        /*questions.push(question2);
+         questions.push(question3);
         questions.push(question4);
         questions.push(question5);
         questions.push(question6);
@@ -360,7 +360,7 @@ io.on('connection', function (socket) {
         questions.push(question16);
         questions.push(question17);
         questions.push(question18);
-        questions.push(question19);
+        questions.push(question19); */
 
         return questions;
     }

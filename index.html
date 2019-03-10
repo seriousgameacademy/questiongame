@@ -51,6 +51,17 @@
     background-size: cover;
     }
 
+    .backgroundwinner{
+            background-image: url("https://novanetprdstorage.blob.core.windows.net:443/questiongame/game-background-002.jpg");
+                /* Full height */
+    height: 100%; 
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
+
     .jumbotron {
     background-color: #fff;
     color: #000000;
@@ -325,6 +336,7 @@
         gamestate = data.state;
         // Hide all
         $('#bodypage').removeClass("background");
+        $('#bodypage').removeClass("backgroundwinner");
         $('#admin-question-container-multi').hide();
         $('#admin-question-container-open').hide();
         $('#admin-result-question-container').hide();
@@ -421,6 +433,7 @@
         if (data.state == 'gameover' && mode == 'admin') {
             $("#admin-container").show();
             $('#admin-ranking-container').show();
+            $('#bodypage').addClass("backgroundwinner");
             $('#admin-status-message').html("<h1>GAME OVER</h1>");
         }
 
@@ -1162,7 +1175,7 @@
                 </div>
             </div>
             <div class="col-sm-8">
-                <div class="row" style="margin-top:80px">
+                <div class="row jumbotron" style="margin-top:80px">
                     <div class="col-sm-12 text-center">
                         <h1>Top 10 Ranking</h1>
                     </div>
