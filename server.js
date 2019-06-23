@@ -321,15 +321,49 @@ io.on('connection', function (socket) {
 
     function getQuestions() {
         var questions = [];
-        var question1 = { question: "Wat is de merkessentie van Disney?", type: "multiple", A: "Plezier", B: "Magie", C: "Familie vermaak", D: "Rust", Correct: "B" }
-        var question2 = { question: "Wat is de merkessentie van AirBnB?", type: "multiple", A: "Voordelig verblijven", B: "Ontdek diversiteit", C: "Thuis voelen", D: "Vrijheid", Correct: "C" }
-        var question3 = { question: "Wat is de merkessentie van Lexus?", type: "multiple", A: "Goedkoop", B: "Betaalbare luxe", C: "Betrouwbaar", D: "Ultieme rijplezier", Correct: "B" }
-        var question4 = { question: "Wat is de merkessentie van Harley Davidson?", type: "multiple", A: "Stoer", B: "Speels", C: "Eigen identiteit", D: "Bevrijdend", Correct: "D" }
+        //var question1 = { question: "Wat is de merkessentie van Disney?", type: "multiple", A: "Plezier", B: "Magie", C: "Familie vermaak", D: "Rust", Correct: "B" }
+        //var question2 = { question: "Wat is de merkessentie van AirBnB?", type: "multiple", A: "Voordelig verblijven", B: "Ontdek diversiteit", C: "Thuis voelen", D: "Vrijheid", Correct: "C" }
+        //var question3 = { question: "Wat is de merkessentie van Lexus?", type: "multiple", A: "Goedkoop", B: "Betaalbare luxe", C: "Betrouwbaar", D: "Ultieme rijplezier", Correct: "B" }
+        //var question4 = { question: "Wat is de merkessentie van Harley Davidson?", type: "multiple", A: "Stoer", B: "Speels", C: "Eigen identiteit", D: "Bevrijdend", Correct: "D" }
+        //questions.push(question1);
+        ///questions.push(question2);
+        //questions.push(question3);
+        //questions.push(question4);
+
+        //var question1 = { question: "", type: "multiple", A: "", B: "", C: "", D: "", Correct: "" }
+        
+        var question1 = { question: "Hoeveel leden heeft de Haai op dit moment", type: "multiple", A: "45", B: "55", C: "65", D: "75", Correct: "B" };
+        var question2 = { question: "Hoeveel procent van de leden heeft een LinkedIn profiel", type: "multiple", A: "78", B: "83", C: "88", D: "93", Correct: "A" }
+        var question3 = { question: "Welke motivatie stond centraal bij de kennismakingsgame?", type: "multiple", A: "Doel", B: "Groei", C: "Social", D: "Vermijden", Correct: "C" }
+        var question4 = { question: "Hoeveel procent van de Haai leden is een man?", type: "multiple", A: "76%", B: "86%", C: "96%", D: "100%", Correct: "C" }
+        var question5 = { question: "Welke  (LinkedIn) skills komen het meest voor bij Haai leden?", type: "multiple", A: "B2B, Sales, Marketing", B: "Management, Coaching, SEO", C: "ICT, Management, Sales", D: "Sales, Marketing, ICT", Correct: "A" }
+        var question6 = { question: "Welke motivatie staat centraal wanneer je meespeelt met de postcodeloterij", type: "multiple", A: "Doel", B: "Groei", C: "Social", D: "Vermijden", Correct: "D" }
+        var question7 = { question: "Hoeveel functies heeft een Haai lid gemiddeld op LinkedIn staan?", type: "multiple", A: "2.1", B: "2.6", C: "3.1", D: "3.6", Correct: "A" }
+        var question8 = { question: "De Groenlandse haai kan heel oud worden, namelijk:", type: "multiple", A: "70 - 120 jaar", B: "130 - 180 jaar", C: "190 - 240 jaar", D: "ouder dan 270 jaar", Correct: "D" }
+        var question9 = { question: "Het wifi wachtwoord van de Haai is:", type: "multiple", A: "Wifi-Haai", B: "haaaai-Good2CU", C: "Haai-good2cu", D: "haaaai-GOOD2cu", Correct: "B" }
+        var question10 = { question: "Hoeveel verschillende talen spreekt een gemiddeld Haai lid?", type: "multiple", A: "2.5", B: "3", C: "3.5", D: "4", Correct: "B" }
+        var question11 = { question: "Wat zijn de drie productgroepen van Serious Game Academy?", type: "multiple", A: "Platform | Training | Gamification", B: "Online | Offline | Blended", C: "Games | Fun | Serious", D: "App | Website | Training", Correct: "A" }
+        var question12 = { question: "Ons clubhuis staat op het :", type: "multiple", A: "Visserseiland", B: "Viseiland", C: "Scheepseiland", D: "Visserij eiland", Correct: "A" }
+        var question13 = { question: "Welke unieke (LinkedIn) skills bezitten enkele Haai leden?", type: "multiple", A: "Coffee", B: "Environmental law", C: "Art", D: "Alle skills", Correct: "D" }
+        var question14 = { question: "De makreel haai heeft het wereldrecord hoogspringen, de haai springt:", type: "multiple", A: "3 meter 60 cm hoog", B: "5 meter 60 cm hoog", C: "7 meter 60 cm hoog", D: "9 meter 60 cm hoog", Correct: "C" }
+        var question15 = { question: "De Haai society is opgericht in", type: "multiple", A: "2016", B: "2017", C: "2018", D: "2019", Correct: "C" }
+
         questions.push(question1);
         questions.push(question2);
         questions.push(question3);
         questions.push(question4);
-
+        questions.push(question5);
+        questions.push(question6);
+        questions.push(question7);
+        questions.push(question8);
+        questions.push(question9);
+        questions.push(question10);
+        questions.push(question11);
+        questions.push(question12);
+        questions.push(question13);
+        questions.push(question14);
+        questions.push(question15);
+        
         return questions;
     }
 });
